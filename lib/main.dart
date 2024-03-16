@@ -2,6 +2,8 @@ import 'package:cityway_report_client/auth/signin/signin.dart';
 import 'package:cityway_report_client/auth/signup/signup.dart';
 import 'package:cityway_report_client/auth/signup/signup_bindings.dart';
 import 'package:cityway_report_client/core/resource/color_manager.dart';
+import 'package:cityway_report_client/splash/splash_bindings.dart';
+import 'package:cityway_report_client/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
@@ -40,11 +42,15 @@ class MyApp extends StatelessWidget {
       ],
       locale: const Locale('ar', ''),
 //      home: const CreateReport(),
-      initialRoute: '/home',
+      initialRoute: '/splash',
 
       //Navigate to report screen
 
       getPages: [
+        GetPage(
+            name: '/splash',
+            page: () => const Splash(),
+            binding: SplashBindings()),
         GetPage(
             name: '/signup',
             page: () => const SignUp(),
