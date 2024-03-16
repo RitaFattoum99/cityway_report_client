@@ -142,9 +142,11 @@ class DataAllReport {
         finishingDateOfWork: json["finishing_date_of_work"],
         madeBy: json["made_by"],
         revisedBy: json["revised_by"],
-        fmeId: int.tryParse(json["fme_id"]) ?? 0,
+        fmeId: json["fme_id"] == null
+            ? 0
+            : int.tryParse(json["fme_id"].toString()) ?? 0,
         fmeDate: DateTime.parse(json["fme_date"] ?? DateTime.now().toString()),
-        estimationId: int.tryParse(json["estimation_id"]) ?? 0,
+        estimationId: json["estimation_id"] ==null ? 0 : int.tryParse(json["estimation_id"]) ?? 0,
         estimationDate: DateTime.parse(
             json["estimation_date"] ?? DateTime.now().toString()),
         acceptedBy: json["accepted_by"],
