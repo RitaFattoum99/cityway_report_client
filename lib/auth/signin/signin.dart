@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+
 import '/auth/signin/signin_controller.dart';
 import '/core/resource/color_manager.dart';
 import '/core/resource/size_manger.dart';
@@ -176,9 +178,14 @@ class _SignInState extends State<SignIn> {
                           print("email: ${signinController.email}");
                           print("password: ${signinController.password}");
                           await signinController.doSignIn();
-                          //if (signinController.loginStatus) {
-
-                          //}
+                          if (signinController.loginStatus) {
+                            EasyLoading.showSuccess(signinController.message,
+                                duration: const Duration(seconds: 2));
+                            Get.offNamed('home');
+                          } else {
+                            EasyLoading.showError(signinController.message);
+                            print("Login error");
+                          }
                         },
                         child: Container(
                           height: size.height * 0.1,

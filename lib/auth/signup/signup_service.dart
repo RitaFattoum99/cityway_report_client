@@ -5,7 +5,6 @@ import '/auth/user_model.dart';
 import '/core/config/information.dart';
 import '/core/config/service_config.dart';
 import '/core/native_service/secure_storage.dart';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class SignUpService {
@@ -48,7 +47,7 @@ class SignUpService {
         var jsonresponse = jsonDecode(response.body);
         token = jsonresponse['data']['token'];
         role = jsonresponse['data']['roles'][0];
-        userID = jsonresponse['data']['id'][0];
+        userID = jsonresponse['data']['id'];
         username = jsonresponse['data']['username'];
         print(response.statusCode);
         print(response.body);
@@ -63,7 +62,6 @@ class SignUpService {
         Information.role = role;
         Information.userId = userID;
         await secureStorage.saveInt("id", Information.userId);
-        Get.offNamed('home');
 
         return true;
       } else if (response.statusCode == 404 || response.statusCode == 500) {

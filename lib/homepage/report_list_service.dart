@@ -20,9 +20,6 @@ class ReportListService {
       print("token $token");
       var jsonResponse = jsonDecode(response.body);
       var reportList = Allreports.fromJson(jsonResponse);
-      // for (var datum in reportList.data) {
-      //   print(datum.id); // Print the 'id' property of each Datum object
-      // }
       return reportList.data;
     } else {
       print("token $token");

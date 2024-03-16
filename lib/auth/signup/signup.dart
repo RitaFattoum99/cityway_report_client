@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+
 import '/auth/signup/signup_controller.dart';
 import '/core/resource/color_manager.dart';
 import '/core/resource/size_manger.dart';
@@ -268,9 +270,18 @@ class _SignUpState extends State<SignUp> {
                                       "password: ${signUpController.password}");
                                   print(
                                       "confirmPassword: ${signUpController.confirmPassword}");
+                                  EasyLoading.show(
+                                      status: 'loading...', dismissOnTap: true);
                                   await signUpController.doSignUp();
                                   if (signUpController.registerStatus) {
-                                    Get.offNamed('create');
+                                    EasyLoading.showSuccess(
+                                        signUpController.message,
+                                        duration: const Duration(seconds: 2));
+                                    Get.offAllNamed('home');
+                                  } else {
+                                    EasyLoading.showError(
+                                        signUpController.message);
+                                    print("error registeration");
                                   }
                                 },
                                 icon: const Icon(
