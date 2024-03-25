@@ -8,9 +8,8 @@ import 'package:http/http.dart' as http;
 class ReportListService {
   var url =
       Uri.parse(ServiceConfig.domainNameServer + ServiceConfig.getListReport);
-  var url1 = Uri.parse('https://cityway.boomuae.com/api/report');
   Future<List<DataAllReport>> getReportList(String token) async {
-    final response = await http.get(url1, headers: {
+    final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
       'Accept': 'application/json'
     });

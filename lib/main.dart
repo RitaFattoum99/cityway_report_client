@@ -2,6 +2,7 @@ import 'package:cityway_report_client/auth/signin/signin.dart';
 import 'package:cityway_report_client/auth/signup/signup.dart';
 import 'package:cityway_report_client/auth/signup/signup_bindings.dart';
 import 'package:cityway_report_client/core/resource/color_manager.dart';
+import 'package:cityway_report_client/create_report/test_create_screen.dart';
 import 'package:cityway_report_client/splash/splash_bindings.dart';
 import 'package:cityway_report_client/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 
 import 'auth/signin/signin_bindings.dart';
-import 'create_report/create_report_screen.dart';
 import 'create_report/report_bindings.dart';
 import 'homepage/homepage_screen.dart';
 import 'homepage/report_list_bindings.dart';
@@ -25,12 +25,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //Get.put(ReportController());
-    //Get.put(ReportListController());
     return GetMaterialApp(
       theme: ThemeData(
         colorScheme:
-            ColorScheme.fromSeed(seedColor: AppColorManger.mainAppColor),
+            ColorScheme.fromSeed(seedColor: AppColorManager.mainAppColor),
         useMaterial3: true,
       ),
       localizationsDelegates: const [
@@ -42,7 +40,6 @@ class MyApp extends StatelessWidget {
         Locale('ar', ''),
       ],
       locale: const Locale('ar', ''),
-//      home: const CreateReport(),
       initialRoute: '/splash',
 
       //Navigate to report screen

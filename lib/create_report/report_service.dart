@@ -2,9 +2,9 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:cityway_report_client/jobDes/job_description_model.dart';
+
 import '/core/config/service_config.dart';
-import '/create_report/complaint_party_model.dart'
-    as ComplaintPartyModel;
 import '/create_report/report_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -14,22 +14,35 @@ class ReportService {
   Future<bool> create(Data report, String token) async {
     print("create");
     final request = http.MultipartRequest('POST', url)
-      ..fields['project'] = report.project
-      ..fields['location'] = report.location
-      ..fields['report_number'] = report.reportNumber
+      ..fields['google_map_location'] =
+          "https://maps.app.goo.gl/C192Q5MHTATT45SRA"
+      ..fields['project'] = report.project!
+      ..fields['location'] = report.location!
+      ..fields['complaint_number'] = report.complaintNumber!
       ..fields['complaint_party_id'] = report.complaintPartyId.toString()
-      ..fields['contact_name'] = report.contactName
-      ..fields['contact_position'] = report.contactPosition
-      ..fields['contact_number'] = report.contactNumber
-      ..fields['type_of_work'] = report.typeOfWork;
+      ..fields['type_of_work'] = report.typeOfWork!
+      ..fields['urgent'] = report.urgent.toString()
+      ..fields['budget'] = report.budget.toString();
+
+    final List<String?> contactInfo =
+        report.contactInfo!.map((e) => e.name).toList();
+
+    for (int i = 0; i < contactInfo.length; i++) {
+      final info = report.contactInfo![i];
+      request.fields['report_contact_info[$i][name]'] = info.name.toString();
+      request.fields['report_contact_info[$i][phone]'] = info.phone.toString();
+      request.fields['report_contact_info[$i][position]'] =
+          info.position.toString();
+    }
 
     final List<String?> jobDescriptions =
-        report.jobDescription.map((jobDesc) => jobDesc.description).toList();
+        report.reportDescription.map((jobDesc) => jobDesc.description).toList();
 
     for (int i = 0; i < jobDescriptions.length; i++) {
-      final jobDesc = report.jobDescription[i];
-      request.fields['job_descriptions[$i][description]'] =
+      final jobDesc = report.reportDescription[i];
+      request.fields['report_descriptions[$i][description]'] =
           jobDesc.description.toString();
+      request.fields['report_descriptions[$i][note]'] = jobDesc.note.toString();
 
       if (jobDesc.desImg != null) {
         if (jobDesc.desImg != null) {
@@ -38,17 +51,18 @@ class ReportService {
           String imageName = File(jobDesc.desImg!.path).path.split("/").last;
 
           // Add base64-encoded image to the request
-          request.fields['job_descriptions[$i][des_img]'] = imageName;
+          request.fields['report_descriptions[$i][des_img]'] = imageName;
 
           // Add image as a file to the request
           request.files.add(http.MultipartFile.fromBytes(
-            'job_descriptions[$i][des_img]',
+            'report_descriptions[$i][des_img]',
             bytes,
             filename: imageName,
           ));
         }
       }
     }
+
     // Print the entire request just before sending
     print('Final Request: ${request.fields}');
     print('Files: ${request.files}');
@@ -67,7 +81,7 @@ class ReportService {
 
     final Map<String, dynamic> jsonResponse =
         json.decode(await response.stream.bytesToString());
-    print("Raw Response: $jsonResponse");
+    print("Response: $jsonResponse");
     print("Status Code: ${response.statusCode}");
     print("message: ${jsonEncode(message)}");
     if (jsonResponse.containsKey('message')) {
@@ -98,6 +112,28 @@ class ReportService {
     }
   }
 
+  var url1 =
+      Uri.parse(ServiceConfig.domainNameServer + ServiceConfig.getListDes);
+  Future<List<DataAllDes>> getDesList(String token) async {
+    final response = await http.get(url1, headers: {
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json'
+    });
+    if (response.statusCode == 200) {
+      print('response.statusCode: ${response.statusCode} report list');
+      print("response.body: ${response.body}");
+      print("token $token");
+      var jsonResponse = jsonDecode(response.body);
+      var reportList = AlljobDescription.fromJson(jsonResponse);
+      return reportList.data;
+    } else {
+      print("token $token");
+      print(response.statusCode);
+      print(response.body);
+      throw Exception('Failed to load order list');
+    }
+  }
+/*
   var urlget =
       Uri.parse(ServiceConfig.domainNameServer + ServiceConfig.complaintParty);
   Future<List<ComplaintPartyModel.DataComplaintParty>> getComplaintList(
@@ -119,6 +155,5 @@ class ReportService {
       throw Exception('Failed to load ComplaintParty list');
     }
   }
-
-
+*/
 }

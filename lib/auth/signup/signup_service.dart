@@ -30,6 +30,8 @@ class SignUpService {
       var response = await http.post(url, headers: {
         'Accept': 'application/json',
         'Connection': 'keep-alive',
+          'User-Agent': 'PostmanRuntime/7.37.0',
+      'Accept-Encoding': 'gzip, deflate, br',
       }, body: {
         'username': user.username,
         'email': user.email,
