@@ -89,7 +89,8 @@ class DataAllReport {
         googleMapLocation: json["google_map_location"],
         complaintPartyId: json["complaint_party_id"],
         complaintNumber: json["complaint_number"],
-        complaintDate: DateTime.parse(json["complaint_date"]),
+        complaintDate:
+            DateTime.parse(json["complaint_date"] ?? DateTime.now().toString()),
         reportDate:
             DateTime.parse(json["report_date"] ?? DateTime.now().toString()),
         typeOfWork: json["type_of_work"],
@@ -100,7 +101,7 @@ class DataAllReport {
         statusClient: json["status_client"],
         statusAdmin: json["status_admin"],
         urgent: json["urgent"],
-        budget: json["budget"],
+        budget: json["budget"] ?? 0,
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
         complaintParty: json["complaint_party"],
