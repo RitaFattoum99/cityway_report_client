@@ -2,7 +2,7 @@ class ServiceConfig {
   //https://cityway.boomuae.com/api/
   //http://192.168.1.106:8000/api/
   //192.168.172.20
-  static const domainNameServer = 'http://192.168.1.106:8000/api/';
+  static const domainNameServer = 'https://cityway-reports.katbi.net/api/';
 
 //! Auth
   static const signIn = 'login';
