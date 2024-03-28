@@ -2,7 +2,7 @@ import 'package:cityway_report_client/auth/signin/signin.dart';
 import 'package:cityway_report_client/auth/signup/signup.dart';
 import 'package:cityway_report_client/auth/signup/signup_bindings.dart';
 import 'package:cityway_report_client/core/resource/color_manager.dart';
-import 'package:cityway_report_client/create_report/test_create_screen.dart';
+import 'package:cityway_report_client/create_report/create_report_screen.dart';
 import 'package:cityway_report_client/splash/splash_bindings.dart';
 import 'package:cityway_report_client/splash/splash_screen.dart';
 import 'package:flutter/material.dart';

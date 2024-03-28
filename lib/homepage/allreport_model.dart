@@ -83,7 +83,7 @@ class DataAllReport {
 
   factory DataAllReport.fromJson(Map<String, dynamic> json) => DataAllReport(
         id: json["id"],
-        qrCode: json["qr_code"],
+        qrCode: json["qr_code"] ?? '',
         project: json["project"],
         location: json["location"],
         googleMapLocation: json["google_map_location"],
@@ -208,7 +208,7 @@ class ReportDescription {
   int id;
   int reportId;
   String description;
-  dynamic note;
+  String? note;
   String desImg;
   DateTime createdAt;
   DateTime updatedAt;
@@ -217,7 +217,7 @@ class ReportDescription {
     required this.id,
     required this.reportId,
     required this.description,
-    required this.note,
+    this.note,
     required this.desImg,
     required this.createdAt,
     required this.updatedAt,
@@ -228,7 +228,7 @@ class ReportDescription {
         id: json["id"],
         reportId: json["report_id"],
         description: json["description"],
-        note: json["note"],
+        note: json["note"] ?? '',
         desImg: json["des_img"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
