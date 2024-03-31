@@ -52,7 +52,7 @@ class DataAllReport {
   DateTime updatedAt;
   String complaintParty;
   List<ContactInfo> contactInfo;
-  List<dynamic> reportJobDescription;
+  List<ReportJobDescription> reportJobDescription;
   List<ReportDescription> reportDescription;
 
   DataAllReport({
@@ -107,8 +107,9 @@ class DataAllReport {
         complaintParty: json["complaint_party"],
         contactInfo: List<ContactInfo>.from(
             json["contact_info"].map((x) => ContactInfo.fromJson(x))),
-        reportJobDescription:
-            List<dynamic>.from(json["report_job_description"].map((x) => x)),
+        reportJobDescription: List<ReportJobDescription>.from(
+            json["report_job_description"]
+                .map((x) => ReportJobDescription.fromJson(x))),
         reportDescription: List<ReportDescription>.from(
             json["report_description"]
                 .map((x) => ReportDescription.fromJson(x))),
@@ -243,5 +244,91 @@ class ReportDescription {
         "des_img": desImg,
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
+      };
+}
+
+class ReportJobDescription {
+  int? id;
+  int? reportId;
+  int? jobDescriptionId;
+  String? desImg;
+  String? afterDesImg;
+  int? price;
+  int? quantity;
+  String? note;
+  JobDescription? jobDescription;
+
+  ReportJobDescription({
+    this.id,
+    this.reportId,
+    this.jobDescriptionId,
+    this.desImg,
+    this.afterDesImg,
+    this.price,
+    this.quantity,
+    this.note,
+    this.jobDescription,
+  });
+
+  @override
+  String toString() {
+    return 'ReportJobDescription(jobDescription: $jobDescription, note: $note, price: $price, quantity: $quantity, desImg: $desImg, jobDescriptionId: $jobDescriptionId)';
+  }
+
+  factory ReportJobDescription.fromJson(Map<String, dynamic> json) =>
+      ReportJobDescription(
+        id: json["id"],
+        reportId: json["report_id"],
+        jobDescriptionId: json["job_description_id"],
+        desImg: json["des_img"],
+        afterDesImg: json["after_des_img"],
+        price: json["price"],
+        quantity: json["quantity"],
+        note: json["note"],
+        jobDescription: JobDescription.fromJson(json["job_description"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "report_id": reportId,
+        "job_description_id": jobDescriptionId,
+        "des_img": desImg,
+        "after_des_img": afterDesImg,
+        "price": price,
+        "quantity": quantity,
+        "note": note,
+        "job_description": jobDescription!.toJson(),
+      };
+}
+
+class JobDescription {
+  int? id;
+  String? description;
+  int? price;
+  String? unit;
+
+  JobDescription({
+    this.id,
+    this.description,
+    this.price,
+    this.unit,
+  });
+  @override
+  String toString() {
+    return 'JobDescription(description: $description, unit: $unit)';
+  }
+
+  factory JobDescription.fromJson(Map<String, dynamic> json) => JobDescription(
+        id: json["id"],
+        description: json["description"],
+        price: json["price"],
+        unit: json["unit"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "description": description,
+        "price": price,
+        "unit": unit,
       };
 }

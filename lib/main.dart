@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
             binding: SigninBindings()),
         GetPage(
           name: '/home',
-          page: () => TabBarWithListView(),
+          page: () => const TabBarWithListView(),
           binding: ReportListBindings(),
         ),
         GetPage(

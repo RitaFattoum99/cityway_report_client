@@ -1,82 +1,52 @@
-// ignore_for_file: avoid_print
-
 import 'package:cityway_report_client/homepage/reoport_list_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../report_acceptance_screen.dart';
 import '../report_details.dart';
 import '/core/config/information.dart';
 import '/core/native_service/secure_storage.dart';
 import '/core/resource/color_manager.dart';
 import '/homepage/allreport_model.dart';
+import 'homepage/homepage_screen.dart';
 
-class TabBarWithListView extends StatefulWidget {
-  const TabBarWithListView({Key? key}) : super(key: key);
+class ReportAcceptanceScreen extends StatelessWidget {
+  ReportAcceptanceScreen({Key? key}) : super(key: key);
 
-  @override
-  State<TabBarWithListView> createState() => _TabBarWithListViewState();
-}
-
-class _TabBarWithListViewState extends State<TabBarWithListView> {
   final ReportListController controller = Get.put(ReportListController());
-
-  late SecureStorage secureStorage = SecureStorage();
-
-  String userName = "";
-  String email = "";
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      var statusList = [
-        'Urgent',
-        'Done',
-        'Pending',
-        'In-Progress',
-        'Complete',
-        'Rejected'
-      ];
-      var tabs = statusList
-          .map((status) => Tab(
-              text:
-                  '${_getStatusValue(status)} (${_getReportCountByStatus(status)})'))
-          .toList();
       return DefaultTabController(
-        length: statusList.length,
+        length: 1, // Only one tab for "Complete" reports
         child: Scaffold(
           appBar: AppBar(
             title: const Text(
               'التقاريـر',
               style: TextStyle(color: AppColorManager.white),
             ),
-            bottom: TabBar(
-              isScrollable: true,
-              labelColor: AppColorManager.babyGreyAppColor,
-              unselectedLabelColor: AppColorManager.white,
-              tabs: tabs,
-            ),
             backgroundColor: AppColorManager.mainAppColor,
           ),
           body: TabBarView(
-            children: statusList
-                .map((status) => _buildReportList(status: status))
-                .toList(),
+            children: [
+              _buildReportList(
+                  status: 'Complete'), // Only show "Complete" reports
+            ],
           ),
-          drawer: _buildDrawer(context, userName, email),
+          drawer: _buildDrawer(context),
           floatingActionButton: _buildAddReportButton(context),
         ),
       );
     });
   }
 
-  Drawer _buildDrawer(BuildContext context, String userName, String email) {
+  Drawer _buildDrawer(BuildContext context) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           UserAccountsDrawerHeader(
-            accountName: Text(userName),
-            accountEmail: Text(email),
+            accountName: Text(Information.username),
+            accountEmail: Text(Information.email),
             currentAccountPicture: CircleAvatar(
                 backgroundColor: AppColorManager.white,
                 child: Image.asset("assets/images/logo.png")),
@@ -93,7 +63,7 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
                   fontWeight: FontWeight.bold),
             ),
             onTap: () {
-              Navigator.pop(context);
+              Get.to(() => const TabBarWithListView());
             },
           ),
           ListTile(
@@ -108,7 +78,7 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
                   fontWeight: FontWeight.bold),
             ),
             onTap: () {
-              Get.to(() => ReportAcceptanceScreen());
+              Navigator.pop(context);
             },
           ),
           ListTile(
@@ -134,7 +104,9 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
       return const Center(child: CircularProgressIndicator());
     } else {
       var reports = controller.reportList
-          .where((report) => report.statusClient == status)
+          .where((report) =>
+              report.statusClient ==
+              'Complete') // Filter only "Complete" reports
           .toList();
 
       if (reports.isEmpty) {
@@ -148,7 +120,6 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
             itemCount: reports.length,
             itemBuilder: (context, index) => GestureDetector(
                 onTap: () {
-                  // Handle tap
                   Get.to(() => ReportDetailsScreen(report: reports[index]));
                 },
                 child: _buildReportItem(reports[index])),
@@ -156,12 +127,6 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
         );
       }
     }
-  }
-
-  int _getReportCountByStatus(String status) {
-    return controller.reportList
-        .where((report) => report.statusClient == status)
-        .length;
   }
 
   Widget _buildEmptyListAnimation() {
@@ -310,34 +275,6 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
         return 'منتهي';
       default:
         return '';
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    // Fetch user name on widget initialization
-    fetchUserName();
-  }
-
-  Future<void> fetchUserName() async {
-    secureStorage = SecureStorage();
-    String? name = await secureStorage.read("username");
-    String? myEmail = await secureStorage.read("email");
-    print('username : $name');
-    print('myEmail : $myEmail');
-    // Fetch user name using the key
-    if (name != null) {
-      setState(() {
-        userName = name; // Set the user name if found
-        print("username in drawer: $userName");
-      });
-    }
-    if (myEmail != null) {
-      setState(() {
-        email = myEmail; // Set the user name if found
-        print("email in drawer: $email");
-      });
     }
   }
 }

@@ -3,6 +3,7 @@ class ServiceConfig {
   //http://192.168.1.106:8000/api/
   //192.168.172.20
   static const domainNameServer = 'https://cityway-reports.katbi.net/api/';
+  static String baseUrl = 'https://cityway-reports.katbi.net/';
 
 //! Auth
   static const signIn = 'login';
@@ -15,4 +16,9 @@ class ServiceConfig {
   static const getListReport = 'report';
   static const getListMaterial = 'material';
   static const getListDes = 'job_description';
+
+  String getFullImageUrl(String? partialUrl) {
+    Uri uri = Uri.parse(partialUrl!);
+    return ServiceConfig.baseUrl + uri.path;
+  }
 }
