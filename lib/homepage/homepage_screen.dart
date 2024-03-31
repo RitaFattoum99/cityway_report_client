@@ -3,7 +3,7 @@
 import 'package:cityway_report_client/homepage/reoport_list_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../report_acceptance_screen.dart';
+import '../list_report_acceptance_screen.dart';
 import '../report_details.dart';
 import '/core/config/information.dart';
 import '/core/native_service/secure_storage.dart';

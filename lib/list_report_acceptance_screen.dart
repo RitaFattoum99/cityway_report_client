@@ -1,12 +1,12 @@
 import 'package:cityway_report_client/homepage/reoport_list_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../report_details.dart';
 import '/core/config/information.dart';
 import '/core/native_service/secure_storage.dart';
 import '/core/resource/color_manager.dart';
 import '/homepage/allreport_model.dart';
 import 'homepage/homepage_screen.dart';
+import 'report_accept.dart';
 
 class ReportAcceptanceScreen extends StatelessWidget {
   ReportAcceptanceScreen({Key? key}) : super(key: key);
@@ -120,7 +120,7 @@ class ReportAcceptanceScreen extends StatelessWidget {
             itemCount: reports.length,
             itemBuilder: (context, index) => GestureDetector(
                 onTap: () {
-                  Get.to(() => ReportDetailsScreen(report: reports[index]));
+                  Get.to(() => ReportAcceptScreen(report: reports[index]));
                 },
                 child: _buildReportItem(reports[index])),
           ),
