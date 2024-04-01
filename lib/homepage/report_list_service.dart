@@ -24,7 +24,7 @@ class ReportListService {
       print("token $token");
       print(response.statusCode);
       print(response.body);
-      throw Exception('Failed to load order list');
+      throw Exception('Failed to load list');
     }
   }
 }

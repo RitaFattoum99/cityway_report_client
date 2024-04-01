@@ -16,7 +16,7 @@ class ServiceConfig {
   static const getListReport = 'report';
   static const getListMaterial = 'material';
   static const getListDes = 'job_description';
-
+  static const approval = 'report/approval';
   String getFullImageUrl(String? partialUrl) {
     Uri uri = Uri.parse(partialUrl!);
     return ServiceConfig.baseUrl + uri.path;

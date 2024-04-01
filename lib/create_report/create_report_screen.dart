@@ -734,8 +734,16 @@ class _CreateReportState extends State<CreateReport> {
                           for (int i = 0; i < data.length; i++) {
                             reportController.reportDescription[i].description =
                                 data[i]['description'];
+                            String noteText;
+                            if (data[i]['note'] is TextEditingController) {
+                              noteText = data[i]['note'].text;
+                            } else if (data[i]['note'] is String) {
+                              noteText = data[i]['note'];
+                            } else {
+                              noteText = "";
+                            }
                             reportController.reportDescription[i].note =
-                                data[i]['note'].text;
+                                noteText;
                             reportController.reportDescription[i].desImg =
                                 data[i]['descriptionImage'];
                           }

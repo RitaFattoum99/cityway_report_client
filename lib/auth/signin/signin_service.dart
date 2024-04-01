@@ -58,8 +58,8 @@ class SignInService {
       print(message);
       return true;
     } else if (response.statusCode == 422 || response.statusCode == 500) {
-      // message = "please verify your information";
-      message = jsonresponse['message'];
+      message = "please verify your information";
+      //message = jsonresponse['message'];
       print(message);
       return false;
     } else {

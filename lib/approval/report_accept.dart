@@ -1,7 +1,14 @@
+// ignore_for_file: avoid_print
+
+import 'package:get/get.dart';
+
 import '/core/resource/color_manager.dart';
-import '../core/resource/size_manager.dart';
+import '../../core/resource/size_manager.dart';
 import '/homepage/allreport_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+
+import 'approval_controller.dart';
 
 class ReportAcceptScreen extends StatefulWidget {
   final DataAllReport report;
@@ -13,6 +20,8 @@ class ReportAcceptScreen extends StatefulWidget {
 }
 
 class _ReportAcceptScreenState extends State<ReportAcceptScreen> {
+  final ApprovalController approvalController = Get.put(ApprovalController());
+
   Color _acceptedColor = Colors.grey;
   Color _confirmColor = Colors.grey;
   bool isExpanded = false;
@@ -392,11 +401,24 @@ class _ReportAcceptScreenState extends State<ReportAcceptScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             setState(() {
                               _acceptedColor = Colors.green;
                               _confirmColor = Colors.grey;
                             });
+                            EasyLoading.show(
+                                status: 'loading...', dismissOnTap: true);
+                            await approvalController.doAcceptance(
+                                1, widget.report.id);
+                            if (approvalController.approvalStatus) {
+                              EasyLoading.showSuccess(
+                                  approvalController.message,
+                                  duration: const Duration(seconds: 2));
+                              Get.offNamed('home');
+                            } else {
+                              EasyLoading.showError(approvalController.message);
+                              print("Approval error");
+                            }
                           },
                           child: Container(
                             width: size.width * 0.3,
@@ -422,11 +444,24 @@ class _ReportAcceptScreenState extends State<ReportAcceptScreen> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             setState(() {
                               _acceptedColor = Colors.grey;
                               _confirmColor = Colors.red;
                             });
+                            EasyLoading.show(
+                                status: 'loading...', dismissOnTap: true);
+                            await approvalController.doAcceptance(
+                                0, widget.report.id);
+                            if (approvalController.approvalStatus) {
+                              EasyLoading.showSuccess(
+                                  approvalController.message,
+                                  duration: const Duration(seconds: 2));
+                              Get.offNamed('home');
+                            } else {
+                              EasyLoading.showError(approvalController.message);
+                              print("Approval error");
+                            }
                           },
                           child: Container(
                             width: size.width * 0.3,

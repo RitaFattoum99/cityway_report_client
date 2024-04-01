@@ -3,7 +3,7 @@
 import 'package:cityway_report_client/homepage/reoport_list_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../list_report_acceptance_screen.dart';
+import '../approval/list_report_acceptance_screen.dart';
 import '../report_details.dart';
 import '/core/config/information.dart';
 import '/core/native_service/secure_storage.dart';
@@ -34,7 +34,8 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
         'Pending',
         'In-Progress',
         'Complete',
-        'Rejected'
+        'Rejected',
+        'Approved'
       ];
       var tabs = statusList
           .map((status) => Tab(
@@ -280,7 +281,7 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
       case 'Urgent':
         return Colors.red;
       case 'Complete':
-        return Colors.green;
+        return Colors.deepOrange;
       case 'Rejected':
         return Colors.pink;
       case 'In-Progress':
@@ -289,6 +290,8 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
         return Colors.grey;
       case 'Done':
         return Colors.yellow[700]!;
+      case 'Approved':
+        return Colors.green;
       default:
         return Colors.purple;
     }
@@ -308,6 +311,8 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
         return 'قيد الانتظار';
       case 'Done':
         return 'منتهي';
+      case 'Approved':
+        return 'مقبول';
       default:
         return '';
     }

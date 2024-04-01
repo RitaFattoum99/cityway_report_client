@@ -5,7 +5,7 @@ import '/core/config/information.dart';
 import '/core/native_service/secure_storage.dart';
 import '/core/resource/color_manager.dart';
 import '/homepage/allreport_model.dart';
-import 'homepage/homepage_screen.dart';
+import '../homepage/homepage_screen.dart';
 import 'report_accept.dart';
 
 class ReportAcceptanceScreen extends StatelessWidget {
@@ -17,19 +17,29 @@ class ReportAcceptanceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       return DefaultTabController(
-        length: 1, // Only one tab for "Complete" reports
+        length: 3, // Only one tab for "Complete" reports
         child: Scaffold(
           appBar: AppBar(
             title: const Text(
               'التقاريـر',
               style: TextStyle(color: AppColorManager.white),
             ),
+            bottom: const TabBar(
+              tabs: [
+                Tab(text: 'مكتمل'),
+                Tab(text: 'مقبول'),
+                Tab(text: 'مرفوض'),
+              ],
+              labelColor: AppColorManager.babyGreyAppColor,
+              unselectedLabelColor: AppColorManager.white,
+            ),
             backgroundColor: AppColorManager.mainAppColor,
           ),
           body: TabBarView(
             children: [
-              _buildReportList(
-                  status: 'Complete'), // Only show "Complete" reports
+              _buildReportList(status: 'Complete'),
+              _buildReportList(status: 'Approved'),
+              _buildReportList(status: 'Rejected'),
             ],
           ),
           drawer: _buildDrawer(context),
@@ -104,9 +114,7 @@ class ReportAcceptanceScreen extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     } else {
       var reports = controller.reportList
-          .where((report) =>
-              report.statusClient ==
-              'Complete') // Filter only "Complete" reports
+          .where((report) => report.statusClient == status) // Updated filter
           .toList();
 
       if (reports.isEmpty) {
@@ -119,15 +127,45 @@ class ReportAcceptanceScreen extends StatelessWidget {
           child: ListView.builder(
             itemCount: reports.length,
             itemBuilder: (context, index) => GestureDetector(
-                onTap: () {
-                  Get.to(() => ReportAcceptScreen(report: reports[index]));
-                },
-                child: _buildReportItem(reports[index])),
+              onTap: () {
+                Get.to(() => ReportAcceptScreen(report: reports[index]));
+              },
+              child: _buildReportItem(reports[index]),
+            ),
           ),
         );
       }
     }
   }
+  // Widget _buildReportList({required String status}) {
+  //   if (controller.isLoading.value) {
+  //     return const Center(child: CircularProgressIndicator());
+  //   } else {
+  //     var reports = controller.reportList
+  //         .where((report) =>
+  //             report.statusClient ==
+  //             'Complete') // Filter only "Complete" reports
+  //         .toList();
+
+  //     if (reports.isEmpty) {
+  //       return _buildEmptyListAnimation();
+  //     } else {
+  //       return RefreshIndicator(
+  //         onRefresh: () async {
+  //           controller.fetchReports();
+  //         },
+  //         child: ListView.builder(
+  //           itemCount: reports.length,
+  //           itemBuilder: (context, index) => GestureDetector(
+  //               onTap: () {
+  //                 Get.to(() => ReportAcceptScreen(report: reports[index]));
+  //               },
+  //               child: _buildReportItem(reports[index])),
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
 
   Widget _buildEmptyListAnimation() {
     return const AnimatedOpacity(
@@ -245,7 +283,7 @@ class ReportAcceptanceScreen extends StatelessWidget {
       case 'Urgent':
         return Colors.red;
       case 'Complete':
-        return Colors.green;
+        return Colors.deepOrange;
       case 'Rejected':
         return Colors.pink;
       case 'In-Progress':
@@ -254,6 +292,8 @@ class ReportAcceptanceScreen extends StatelessWidget {
         return Colors.grey;
       case 'Done':
         return Colors.yellow[700]!;
+      case 'Approved':
+        return Colors.green;
       default:
         return Colors.purple;
     }
@@ -273,6 +313,8 @@ class ReportAcceptanceScreen extends StatelessWidget {
         return 'قيد الانتظار';
       case 'Done':
         return 'منتهي';
+      case 'Approved':
+        return 'مقبول';
       default:
         return '';
     }
