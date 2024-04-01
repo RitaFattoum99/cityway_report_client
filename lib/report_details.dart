@@ -259,7 +259,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                                   ),
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         );
                       },
@@ -284,7 +284,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                         fontSize: 18),
                   ),
                   SizedBox(
-                    height: 400,
+                    height: 600,
                     width: 300,
                     child: ListView.separated(
                       separatorBuilder: (context, index) =>
@@ -378,7 +378,56 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                                   ),
                                 ),
                               ),
-                            )
+                            ),
+                            const SizedBox(height: 10),
+                            Expanded(
+                              child: Container(
+                                height: 200,
+                                width: 300,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.network(
+                                    // getFullImageUrl
+                                    // (
+                                    widget.report.reportJobDescription[index]
+                                        .afterDesImg!,
+                                    // ),
+                                    fit: BoxFit.cover,
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent? loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        // Image is fully loaded
+                                        return child;
+                                      }
+                                      // While the image is loading, return a loader widget
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                        ),
+                                      );
+                                    },
+                                    errorBuilder: (BuildContext context,
+                                        Object error, StackTrace? stackTrace) {
+                                      return const Center(
+                                        child: Icon(Icons.error),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
                           ],
                         );
                       },
