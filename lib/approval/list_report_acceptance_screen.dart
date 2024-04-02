@@ -20,13 +20,17 @@ class ReportAcceptanceScreen extends StatelessWidget {
         length: 3, // Only one tab for "Complete" reports
         child: Scaffold(
           appBar: AppBar(
+            iconTheme: const IconThemeData(
+              color:
+                  AppColorManager.white, 
+            ),
             title: const Text(
               'الموافقة على التسعير',
               style: TextStyle(color: AppColorManager.white),
             ),
             bottom: const TabBar(
               tabs: [
-                Tab(text: 'مكتمل'),
+                Tab(text: 'منتهي'),
                 Tab(text: 'مقبول'),
                 Tab(text: 'مرفوض'),
               ],
@@ -38,7 +42,7 @@ class ReportAcceptanceScreen extends StatelessWidget {
           ),
           body: TabBarView(
             children: [
-              _buildReportList(status: 'Complete'),
+              _buildReportList(status: 'Done'),
               _buildReportList(status: 'Approved'),
               _buildReportList(status: 'Rejected'),
             ],

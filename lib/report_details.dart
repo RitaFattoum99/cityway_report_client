@@ -410,33 +410,23 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            const SizedBox(width: 6),
                             SizedBox(
                               width: 325,
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.description,
-                                    color: AppColorManager.secondaryAppColor,
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    isExpanded
-                                        ? widget.report.reportDescription[index]
-                                            .description
+                              child: Text(
+                                isExpanded
+                                    ? widget.report.reportDescription[index]
+                                        .description
+                                    : widget.report.reportDescription[index]
+                                                .description.length >
+                                            50
+                                        ? "${widget.report.reportDescription[index].description.substring(0, 40)}..."
                                         : widget.report.reportDescription[index]
-                                                    .description.length >
-                                                50
-                                            ? "${widget.report.reportDescription[index].description.substring(0, 40)}..."
-                                            : widget
-                                                .report
-                                                .reportDescription[index]
-                                                .description,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
+                                            .description,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
                             InkWell(
@@ -527,196 +517,196 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                 endIndent: 10,
               ),
               const SizedBox(height: 5),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Row(
-                    children: [
-                      Icon(
-                        Icons.description,
-                        color: AppColorManager.mainAppColor,
-                      ),
-                      SizedBox(width: 6),
-                      Text(
-                        "وصف الأعمال:",
-                        style: TextStyle(
-                            color: AppColorManager.mainAppColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 600,
-                    width: 300,
-                    child: ListView.separated(
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(width: 20),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: widget.report.reportJobDescription.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: 300,
-                              child: Text(
-                                isExpanded1
-                                    ? widget.report.reportJobDescription[index]
-                                        .jobDescription!.description!
-                                    : widget
-                                                .report
-                                                .reportJobDescription[index]
-                                                .jobDescription!
-                                                .description!
-                                                .length >
-                                            50
-                                        ? "${widget.report.reportJobDescription[index].jobDescription!.description!.substring(0, 40)}..."
-                                        : widget
-                                            .report
-                                            .reportJobDescription[index]
-                                            .jobDescription!
-                                            .description!,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  isExpanded1 = !isExpanded1;
-                                });
-                              },
-                              child: Text(
-                                isExpanded1 ? "عرض أقل" : "...عرض المزيد",
-                                style: const TextStyle(
-                                    color: AppColorManager.greyAppColor,
-                                    fontSize: 16),
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.note_add,
-                                  color: AppColorManager.secondaryAppColor,
-                                ),
-                                const SizedBox(width: 6),
-                                Text(
-                                  'ملاحظة: ${widget.report.reportJobDescription[index].note!}',
-                                  style: const TextStyle(
-                                    color: AppColorManager.secondaryAppColor,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-                            Expanded(
-                              child: Container(
-                                height: 200,
-                                width: 300,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: Image.network(
-                                    // getFullImageUrl
-                                    // (
-                                    widget.report.reportJobDescription[index]
-                                        .desImg!,
-                                    // ),
-                                    fit: BoxFit.cover,
-                                    loadingBuilder: (BuildContext context,
-                                        Widget child,
-                                        ImageChunkEvent? loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        // Image is fully loaded
-                                        return child;
-                                      }
-                                      // While the image is loading, return a loader widget
-                                      return Center(
-                                        child: CircularProgressIndicator(
-                                          value: loadingProgress
-                                                      .expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
-                                        ),
-                                      );
-                                    },
-                                    errorBuilder: (BuildContext context,
-                                        Object error, StackTrace? stackTrace) {
-                                      return const Center(
-                                        child: Icon(Icons.error),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Expanded(
-                              child: Container(
-                                height: 200,
-                                width: 300,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: Image.network(
-                                    // getFullImageUrl
-                                    // (
-                                    widget.report.reportJobDescription[index]
-                                        .afterDesImg!,
-                                    // ),
-                                    fit: BoxFit.cover,
-                                    loadingBuilder: (BuildContext context,
-                                        Widget child,
-                                        ImageChunkEvent? loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        // Image is fully loaded
-                                        return child;
-                                      }
-                                      // While the image is loading, return a loader widget
-                                      return Center(
-                                        child: CircularProgressIndicator(
-                                          value: loadingProgress
-                                                      .expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
-                                        ),
-                                      );
-                                    },
-                                    errorBuilder: (BuildContext context,
-                                        Object error, StackTrace? stackTrace) {
-                                      return const Center(
-                                        child: Icon(Icons.error),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
+              // Column(
+              //   crossAxisAlignment: CrossAxisAlignment.start,
+              //   children: [
+              //     const Row(
+              //       children: [
+              //         Icon(
+              //           Icons.description,
+              //           color: AppColorManager.mainAppColor,
+              //         ),
+              //         SizedBox(width: 6),
+              //         Text(
+              //           "وصف الأعمال:",
+              //           style: TextStyle(
+              //               color: AppColorManager.mainAppColor,
+              //               fontWeight: FontWeight.bold,
+              //               fontSize: 18),
+              //         ),
+              //       ],
+              //     ),
+              //     SizedBox(
+              //       height: 600,
+              //       width: 300,
+              //       child: ListView.separated(
+              //         separatorBuilder: (context, index) =>
+              //             const SizedBox(width: 20),
+              //         scrollDirection: Axis.horizontal,
+              //         itemCount: widget.report.reportJobDescription.length,
+              //         itemBuilder: (BuildContext context, int index) {
+              //           return Column(
+              //             crossAxisAlignment: CrossAxisAlignment.start,
+              //             children: [
+              //               SizedBox(
+              //                 width: 300,
+              //                 child: Text(
+              //                   isExpanded1
+              //                       ? widget.report.reportJobDescription[index]
+              //                           .jobDescription!.description!
+              //                       : widget
+              //                                   .report
+              //                                   .reportJobDescription[index]
+              //                                   .jobDescription!
+              //                                   .description!
+              //                                   .length >
+              //                               50
+              //                           ? "${widget.report.reportJobDescription[index].jobDescription!.description!.substring(0, 40)}..."
+              //                           : widget
+              //                               .report
+              //                               .reportJobDescription[index]
+              //                               .jobDescription!
+              //                               .description!,
+              //                   style: const TextStyle(
+              //                     color: Colors.black,
+              //                     fontSize: 16,
+              //                   ),
+              //                 ),
+              //               ),
+              //               InkWell(
+              //                 onTap: () {
+              //                   setState(() {
+              //                     isExpanded1 = !isExpanded1;
+              //                   });
+              //                 },
+              //                 child: Text(
+              //                   isExpanded1 ? "عرض أقل" : "...عرض المزيد",
+              //                   style: const TextStyle(
+              //                       color: AppColorManager.greyAppColor,
+              //                       fontSize: 16),
+              //                 ),
+              //               ),
+              // const SizedBox(height: 6),
+              // Row(
+              //   children: [
+              //     const Icon(
+              //       Icons.note_add,
+              //       color: AppColorManager.secondaryAppColor,
+              //     ),
+              //     const SizedBox(width: 6),
+              //     Text(
+              //       'ملاحظة: ${widget.report.reportJobDescription[index].note ?? ' '}',
+              //       style: const TextStyle(
+              //         color: AppColorManager.secondaryAppColor,
+              //         fontSize: 16,
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              // const SizedBox(height: 6),
+              //               Expanded(
+              //                 child: Container(
+              //                   height: 200,
+              //                   width: 300,
+              //                   decoration: BoxDecoration(
+              //                     borderRadius: BorderRadius.circular(8),
+              //                   ),
+              //                   child: ClipRRect(
+              //                     borderRadius: BorderRadius.circular(8),
+              //                     child: Image.network(
+              //                       // getFullImageUrl
+              //                       // (
+              //                       widget.report.reportJobDescription[index]
+              //                           .desImg!,
+              //                       // ),
+              //                       fit: BoxFit.cover,
+              //                       loadingBuilder: (BuildContext context,
+              //                           Widget child,
+              //                           ImageChunkEvent? loadingProgress) {
+              //                         if (loadingProgress == null) {
+              //                           // Image is fully loaded
+              //                           return child;
+              //                         }
+              //                         // While the image is loading, return a loader widget
+              //                         return Center(
+              //                           child: CircularProgressIndicator(
+              //                             value: loadingProgress
+              //                                         .expectedTotalBytes !=
+              //                                     null
+              //                                 ? loadingProgress
+              //                                         .cumulativeBytesLoaded /
+              //                                     loadingProgress
+              //                                         .expectedTotalBytes!
+              //                                 : null,
+              //                           ),
+              //                         );
+              //                       },
+              //                       errorBuilder: (BuildContext context,
+              //                           Object error, StackTrace? stackTrace) {
+              //                         return const Center(
+              //                           child: Icon(Icons.error),
+              //                         );
+              //                       },
+              //                     ),
+              //                   ),
+              //                 ),
+              //               ),
+              //               const SizedBox(height: 10),
+              //               Expanded(
+              //                 child: Container(
+              //                   height: 200,
+              //                   width: 300,
+              //                   decoration: BoxDecoration(
+              //                     borderRadius: BorderRadius.circular(8),
+              //                   ),
+              //                   child: ClipRRect(
+              //                     borderRadius: BorderRadius.circular(8),
+              //                     child: Image.network(
+              //                       // getFullImageUrl
+              //                       // (
+              //                       widget.report.reportJobDescription[index]
+              //                           .afterDesImg!,
+              //                       // ),
+              //                       fit: BoxFit.cover,
+              //                       loadingBuilder: (BuildContext context,
+              //                           Widget child,
+              //                           ImageChunkEvent? loadingProgress) {
+              //                         if (loadingProgress == null) {
+              //                           // Image is fully loaded
+              //                           return child;
+              //                         }
+              //                         // While the image is loading, return a loader widget
+              //                         return Center(
+              //                           child: CircularProgressIndicator(
+              //                             value: loadingProgress
+              //                                         .expectedTotalBytes !=
+              //                                     null
+              //                                 ? loadingProgress
+              //                                         .cumulativeBytesLoaded /
+              //                                     loadingProgress
+              //                                         .expectedTotalBytes!
+              //                                 : null,
+              //                           ),
+              //                         );
+              //                       },
+              //                       errorBuilder: (BuildContext context,
+              //                           Object error, StackTrace? stackTrace) {
+              //                         return const Center(
+              //                           child: Icon(Icons.error),
+              //                         );
+              //                       },
+              //                     ),
+              //                   ),
+              //                 ),
+              //               ),
+              //               const SizedBox(height: 10),
+              //             ],
+              //           );
+              //         },
+              //       ),
+              //     ),
+              //   ],
+              // ),
             ],
           ),
         ),
