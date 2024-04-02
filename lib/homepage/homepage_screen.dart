@@ -30,10 +30,10 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
     return Obx(() {
       var statusList = [
         'Urgent',
-        'Done',
         'Pending',
         'In-Progress',
         'Complete',
+        'Done',
         'Rejected',
         'Approved'
       ];
@@ -52,8 +52,9 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
             ),
             bottom: TabBar(
               isScrollable: true,
-              labelColor: AppColorManager.babyGreyAppColor,
-              unselectedLabelColor: AppColorManager.white,
+              labelColor: AppColorManager.white,
+              unselectedLabelColor: AppColorManager.babyGreyAppColor,
+              indicatorColor: AppColorManager.white,
               tabs: tabs,
             ),
             backgroundColor: AppColorManager.mainAppColor,

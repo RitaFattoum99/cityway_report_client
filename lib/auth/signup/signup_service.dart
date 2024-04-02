@@ -28,10 +28,9 @@ class SignUpService {
 
     try {
       var response = await http.post(url, headers: {
+        'User-Agent': 'PostmanRuntime/7.37.0',
         'Accept': 'application/json',
-        'Connection': 'keep-alive',
-          'User-Agent': 'PostmanRuntime/7.37.0',
-      'Accept-Encoding': 'gzip, deflate, br',
+        'Connection': 'keep-alive'
       }, body: {
         'username': user.username,
         'email': user.email,
@@ -39,14 +38,12 @@ class SignUpService {
         'password_confirmation': user.confirmPassword,
       });
 
-      // ... (rest of the code)
-
       print(response.statusCode);
       print(response.body);
-
+      var jsonresponse = jsonDecode(response.body);
+      message = jsonresponse['message'];
       if (response.statusCode == 200 || response.statusCode == 201) {
-        message = "User created successfully";
-        var jsonresponse = jsonDecode(response.body);
+        // message = "User created successfully";
         token = jsonresponse['data']['token'];
         role = jsonresponse['data']['roles'][0];
         userID = jsonresponse['data']['id'];
@@ -66,14 +63,14 @@ class SignUpService {
         await secureStorage.saveInt("id", Information.userId);
 
         return true;
-      } else if (response.statusCode == 404 || response.statusCode == 500) {
-        message = "please verify your information";
+      } else if (response.statusCode == 422 || response.statusCode == 500) {
+        // message = "please verify your information";
         print(response.statusCode);
         print(response.body);
         print(message);
         return false;
       } else {
-        message = "there is error..";
+        // message = "there is error..";
         print(response.statusCode);
         print(response.body);
         print(message);

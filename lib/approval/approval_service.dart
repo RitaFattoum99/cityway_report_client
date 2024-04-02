@@ -10,7 +10,7 @@ class ApprovalService {
     // var url = Uri.parse(
     //     '${ServiceConfig.domainNameServer}${ServiceConfig.approval}/$reportId?approved=$approval');
     var url = Uri.parse(
-        'https://cityway-reports.katbi.net/api/report/approval$reportId?approved=$approval');
+        'https://cityway-reports.katbi.net/api/report/approval/$reportId?approved=$approval');
     print("accceptance");
 
     var response = await http.get(url, headers: {

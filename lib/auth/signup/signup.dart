@@ -205,7 +205,7 @@ class _SignUpState extends State<SignUp> {
                 Get.offAllNamed('home');
               } else {
                 EasyLoading.showError(signUpController.message);
-                print("error registration");
+                print(signUpController.message);
               }
             }
           }),

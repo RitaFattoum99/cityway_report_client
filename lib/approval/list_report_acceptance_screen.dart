@@ -21,7 +21,7 @@ class ReportAcceptanceScreen extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             title: const Text(
-              'التقاريـر',
+              'الموافقة على التسعير',
               style: TextStyle(color: AppColorManager.white),
             ),
             bottom: const TabBar(
@@ -30,8 +30,9 @@ class ReportAcceptanceScreen extends StatelessWidget {
                 Tab(text: 'مقبول'),
                 Tab(text: 'مرفوض'),
               ],
-              labelColor: AppColorManager.babyGreyAppColor,
-              unselectedLabelColor: AppColorManager.white,
+              labelColor: AppColorManager.white,
+              unselectedLabelColor: AppColorManager.babyGreyAppColor,
+              indicatorColor: AppColorManager.white,
             ),
             backgroundColor: AppColorManager.mainAppColor,
           ),
