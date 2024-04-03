@@ -47,8 +47,7 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
         child: Scaffold(
           appBar: AppBar(
             iconTheme: const IconThemeData(
-              color:
-                  AppColorManager.white,
+              color: AppColorManager.white,
             ),
             title: const Text(
               'التقاريـر',

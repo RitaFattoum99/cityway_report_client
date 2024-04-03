@@ -288,12 +288,21 @@ class _ReportAcceptScreenState extends State<ReportAcceptScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "وصف البلاغ:",
-                    style: TextStyle(
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.description,
                         color: AppColorManager.mainAppColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
+                      ),
+                      SizedBox(width: 6),
+                      Text(
+                        "وصف البلاغ:",
+                        style: TextStyle(
+                            color: AppColorManager.mainAppColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: 400,
@@ -416,12 +425,21 @@ class _ReportAcceptScreenState extends State<ReportAcceptScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "وصف الأعمال:",
-                    style: TextStyle(
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.description,
                         color: AppColorManager.mainAppColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
+                      ),
+                      SizedBox(width: 6),
+                      Text(
+                        "وصف الأعمال:",
+                        style: TextStyle(
+                            color: AppColorManager.mainAppColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: 400,
