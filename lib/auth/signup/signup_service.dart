@@ -21,11 +21,6 @@ class SignUpService {
   var url = Uri.parse(ServiceConfig.domainNameServer + ServiceConfig.register);
   Future<bool> register(UserData user) async {
     print("register");
-    print("username: ${user.username}");
-    print("email: ${user.email}");
-    print("password: ${user.password}");
-    print("confirmPassword: ${user.confirmPassword}");
-
     try {
       var response = await http.post(url, headers: {
         'User-Agent': 'PostmanRuntime/7.37.0',
@@ -48,6 +43,7 @@ class SignUpService {
         role = jsonresponse['data']['roles'][0];
         userID = jsonresponse['data']['id'];
         username = jsonresponse['data']['username'];
+        email = jsonresponse['data']['email'];
         print(response.statusCode);
         print(response.body);
         print(message);
@@ -55,11 +51,17 @@ class SignUpService {
         print("role: $role");
         print("user name: $username");
         print("token : $token");
+
         Information.TOKEN = token;
+        Information.userId = userID;
+        Information.username = username;
+        Information.email = email;
+        Information.role = role;
         SecureStorage secureStorage = SecureStorage();
         await secureStorage.save("token", Information.TOKEN);
-        Information.role = role;
-        Information.userId = userID;
+        await secureStorage.save("role", Information.role);
+        await secureStorage.save("username", Information.username);
+        await secureStorage.save("email", Information.email);
         await secureStorage.saveInt("id", Information.userId);
 
         return true;

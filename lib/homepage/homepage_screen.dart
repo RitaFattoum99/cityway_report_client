@@ -31,11 +31,12 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
       var statusList = [
         'Urgent',
         'Pending',
-        'In-Progress',
-        'Complete',
+        'In-Review',
+        'Awaiting Approval',
+        'Awaiting start of work',
+        'Declined',
+        'Work Has started',
         'Done',
-        'Rejected',
-        'Approved'
       ];
       var tabs = statusList
           .map((status) => Tab(
@@ -284,20 +285,24 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
     switch (status) {
       case 'Urgent':
         return Colors.red;
-      case 'Complete':
-        return Colors.deepOrange;
-      case 'Rejected':
-        return Colors.pink;
-      case 'In-Progress':
-        return Colors.blue;
       case 'Pending':
         return Colors.grey;
+      case 'In-Review':
+        return Colors.blue;
+      case 'Awaiting Approval':
+        return Colors.deepOrange;
+      case 'Awaiting start of work':
+        return Colors.pink;
+      case 'Declined':
+        return Colors.indigo;
+      case 'Work Has started':
+        return Colors.purple;
       case 'Done':
         return Colors.yellow[700]!;
-      case 'Approved':
+      case 'Complete':
         return Colors.green;
       default:
-        return Colors.purple;
+        return Colors.black;
     }
   }
 
@@ -305,18 +310,22 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
     switch (status) {
       case 'Urgent':
         return 'عاجل';
-      case 'Complete':
-        return 'مكتمل';
-      case 'Rejected':
-        return 'مرفوض';
-      case 'In-Progress':
-        return 'قيد التطوير';
       case 'Pending':
         return 'قيد الانتظار';
+      case 'In-Review':
+        return 'قيد المراجعة';
+      case 'Awaiting Approval':
+        return 'بانتظار الموافقة';
+      case 'Awaiting start of work':
+        return 'بانتظار بدء العمل';
+      case 'Declined':
+        return 'مرفوض';
+      case 'Work Has started':
+        return 'تم بدأ العمل';
       case 'Done':
         return 'منتهي';
-      case 'Approved':
-        return 'مقبول';
+      case 'Complete':
+        return 'مكتمل';
       default:
         return '';
     }

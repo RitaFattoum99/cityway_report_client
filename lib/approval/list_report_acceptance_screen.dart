@@ -21,8 +21,7 @@ class ReportAcceptanceScreen extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             iconTheme: const IconThemeData(
-              color:
-                  AppColorManager.white, 
+              color: AppColorManager.white,
             ),
             title: const Text(
               'الموافقة على التسعير',
@@ -30,7 +29,7 @@ class ReportAcceptanceScreen extends StatelessWidget {
             ),
             bottom: const TabBar(
               tabs: [
-                Tab(text: 'منتهي'),
+                Tab(text: 'بانتظار الموافقة'),
                 Tab(text: 'مقبول'),
                 Tab(text: 'مرفوض'),
               ],
@@ -42,9 +41,9 @@ class ReportAcceptanceScreen extends StatelessWidget {
           ),
           body: TabBarView(
             children: [
-              _buildReportList(status: 'Done'),
-              _buildReportList(status: 'Approved'),
-              _buildReportList(status: 'Rejected'),
+              _buildReportList(status: 'Awaiting Approval'),
+              _buildReportList(status: 'Awaiting start of work'),
+              _buildReportList(status: 'Declined'),
             ],
           ),
           drawer: _buildDrawer(context),
@@ -287,20 +286,24 @@ class ReportAcceptanceScreen extends StatelessWidget {
     switch (status) {
       case 'Urgent':
         return Colors.red;
-      case 'Complete':
-        return Colors.deepOrange;
-      case 'Rejected':
-        return Colors.pink;
-      case 'In-Progress':
-        return Colors.blue;
       case 'Pending':
         return Colors.grey;
+      case 'In-Review':
+        return Colors.blue;
+      case 'Awaiting Approval':
+        return Colors.deepOrange;
+      case 'Awaiting start of work':
+        return Colors.pink;
+      case 'Declined':
+        return Colors.indigo;
+      case 'Work Has started':
+        return Colors.purple;
       case 'Done':
         return Colors.yellow[700]!;
-      case 'Approved':
+      case 'Complete':
         return Colors.green;
       default:
-        return Colors.purple;
+        return Colors.black;
     }
   }
 
@@ -308,18 +311,22 @@ class ReportAcceptanceScreen extends StatelessWidget {
     switch (status) {
       case 'Urgent':
         return 'عاجل';
-      case 'Complete':
-        return 'مكتمل';
-      case 'Rejected':
-        return 'مرفوض';
-      case 'In-Progress':
-        return 'قيد التطوير';
       case 'Pending':
         return 'قيد الانتظار';
+      case 'In-Review':
+        return 'قيد المراجعة';
+      case 'Awaiting Approval':
+        return 'بانتظار الموافقة';
+      case 'Awaiting start of work':
+        return 'بانتظار بدء العمل';
+      case 'Declined':
+        return 'مرفوض';
+      case 'Work Has started':
+        return 'تم بدأ العمل';
       case 'Done':
         return 'منتهي';
-      case 'Approved':
-        return 'مقبول';
+      case 'Complete':
+        return 'مكتمل';
       default:
         return '';
     }

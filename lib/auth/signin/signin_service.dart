@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 class SignInService {
   var message = '';
   var token = '';
+  var role = '';
   var userID = 0;
   var username = '';
   var email = '';
@@ -34,6 +35,7 @@ class SignInService {
     if (response.statusCode == 200 || response.statusCode == 201) {
       var jsonresponse = jsonDecode(response.body);
       token = jsonresponse['data']['token'];
+      role = jsonresponse['data']['roles'][0];
       userID = jsonresponse['data']['id'];
       username = jsonresponse['data']['username'];
       email = jsonresponse['data']['email'];
