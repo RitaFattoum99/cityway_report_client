@@ -30,7 +30,7 @@ class ReportAcceptanceScreen extends StatelessWidget {
             bottom: const TabBar(
               tabs: [
                 Tab(text: 'بانتظار الموافقة'),
-                Tab(text: 'مقبول'),
+                Tab(text: 'بانتظار بدء العمل'),
                 Tab(text: 'مرفوض'),
               ],
               labelColor: AppColorManager.white,
@@ -42,7 +42,7 @@ class ReportAcceptanceScreen extends StatelessWidget {
           body: TabBarView(
             children: [
               _buildReportList(status: 'Awaiting Approval'),
-              _buildReportList(status: 'Awaiting start of work'),
+              _buildReportList(status: 'Awaiting Start Of Work'),
               _buildReportList(status: 'Declined'),
             ],
           ),
@@ -292,11 +292,11 @@ class ReportAcceptanceScreen extends StatelessWidget {
         return Colors.blue;
       case 'Awaiting Approval':
         return Colors.deepOrange;
-      case 'Awaiting start of work':
+      case 'Awaiting Start Of Work':
         return Colors.pink;
       case 'Declined':
         return Colors.indigo;
-      case 'Work Has started':
+      case 'Work Has Started':
         return Colors.purple;
       case 'Done':
         return Colors.yellow[700]!;
@@ -317,11 +317,11 @@ class ReportAcceptanceScreen extends StatelessWidget {
         return 'قيد المراجعة';
       case 'Awaiting Approval':
         return 'بانتظار الموافقة';
-      case 'Awaiting start of work':
+      case 'Awaiting Start Of Work':
         return 'بانتظار بدء العمل';
       case 'Declined':
         return 'مرفوض';
-      case 'Work Has started':
+      case 'Work Has Started':
         return 'تم بدأ العمل';
       case 'Done':
         return 'منتهي';

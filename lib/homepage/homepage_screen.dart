@@ -33,9 +33,9 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
         'Pending',
         'In-Review',
         'Awaiting Approval',
-        'Awaiting start of work',
+        'Awaiting Start Of Work',
         'Declined',
-        'Work Has started',
+        'Work Has Started',
         'Done',
       ];
       var tabs = statusList
@@ -291,11 +291,11 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
         return Colors.blue;
       case 'Awaiting Approval':
         return Colors.deepOrange;
-      case 'Awaiting start of work':
+      case 'Awaiting Start Of Work':
         return Colors.pink;
       case 'Declined':
         return Colors.indigo;
-      case 'Work Has started':
+      case 'Work Has Started':
         return Colors.purple;
       case 'Done':
         return Colors.yellow[700]!;
@@ -316,11 +316,11 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
         return 'قيد المراجعة';
       case 'Awaiting Approval':
         return 'بانتظار الموافقة';
-      case 'Awaiting start of work':
+      case 'Awaiting Start Of Work':
         return 'بانتظار بدء العمل';
       case 'Declined':
         return 'مرفوض';
-      case 'Work Has started':
+      case 'Work Has Started':
         return 'تم بدأ العمل';
       case 'Done':
         return 'منتهي';

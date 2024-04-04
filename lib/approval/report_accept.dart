@@ -63,12 +63,14 @@ class _ReportAcceptScreenState extends State<ReportAcceptScreen> {
                     Icons.numbers,
                     color: AppColorManager.mainAppColor,
                   ),
-                  Text(
-                    ' رقم البلاغ: ${widget.report.complaintNumber}',
-                    style: const TextStyle(
-                      color: AppColorManager.mainAppColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Text(
+                      ' رقم البلاغ: ${widget.report.complaintNumber}',
+                      style: const TextStyle(
+                        color: AppColorManager.mainAppColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
@@ -81,11 +83,13 @@ class _ReportAcceptScreenState extends State<ReportAcceptScreen> {
                     color: AppColorManager.secondaryAppColor,
                   ),
                   const SizedBox(width: 6),
-                  Text(
-                    ' مقدم البلاغ: ${widget.report.complaintParty}',
-                    style: const TextStyle(
-                      color: AppColorManager.secondaryAppColor,
-                      fontSize: 16,
+                  Expanded(
+                    child: Text(
+                      ' مقدم البلاغ: ${widget.report.complaintParty}',
+                      style: const TextStyle(
+                        color: AppColorManager.secondaryAppColor,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ],
@@ -98,11 +102,13 @@ class _ReportAcceptScreenState extends State<ReportAcceptScreen> {
                     color: AppColorManager.secondaryAppColor,
                   ),
                   const SizedBox(width: 6),
-                  Text(
-                    'اسم المشروع : ${widget.report.project}',
-                    style: const TextStyle(
-                      color: AppColorManager.secondaryAppColor,
-                      fontSize: 16,
+                  Expanded(
+                    child: Text(
+                      'اسم المشروع : ${widget.report.project}',
+                      style: const TextStyle(
+                        color: AppColorManager.secondaryAppColor,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ],
@@ -115,11 +121,13 @@ class _ReportAcceptScreenState extends State<ReportAcceptScreen> {
                     color: AppColorManager.secondaryAppColor,
                   ),
                   const SizedBox(width: 6),
-                  Text(
-                    'موقع المشروع : ${widget.report.location}',
-                    style: const TextStyle(
-                      color: AppColorManager.secondaryAppColor,
-                      fontSize: 16,
+                  Expanded(
+                    child: Text(
+                      'موقع المشروع : ${widget.report.location}',
+                      style: const TextStyle(
+                        color: AppColorManager.secondaryAppColor,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ],
@@ -132,11 +140,13 @@ class _ReportAcceptScreenState extends State<ReportAcceptScreen> {
                     color: AppColorManager.secondaryAppColor,
                   ),
                   const SizedBox(width: 6),
-                  Text(
-                    'الحالة: ${widget.report.location}',
-                    style: const TextStyle(
-                      color: AppColorManager.secondaryAppColor,
-                      fontSize: 16,
+                  Expanded(
+                    child: Text(
+                      'الحالة: ${widget.report.location}',
+                      style: const TextStyle(
+                        color: AppColorManager.secondaryAppColor,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ],
@@ -536,7 +546,15 @@ class _ReportAcceptScreenState extends State<ReportAcceptScreen> {
                                   borderRadius: BorderRadius.circular(8),
                                   child: Image.network(
                                     widget.report.reportJobDescription[index]
-                                        .desImg!,
+                                                .desImg !=
+                                            null
+                                        ? widget
+                                            .report
+                                            .reportJobDescription[index]
+                                            .desImg!
+                                        : 'assets/images/default.png', // Provide a default image path
+                                    // widget.report.reportJobDescription[index]
+                                    //     .desImg!,
                                     fit: BoxFit.cover,
                                     loadingBuilder: (BuildContext context,
                                         Widget child,
