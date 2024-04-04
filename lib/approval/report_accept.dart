@@ -548,13 +548,9 @@ class _ReportAcceptScreenState extends State<ReportAcceptScreen> {
                                     widget.report.reportJobDescription[index]
                                                 .desImg !=
                                             null
-                                        ? widget
-                                            .report
-                                            .reportJobDescription[index]
-                                            .desImg!
-                                        : 'assets/images/default.png', // Provide a default image path
-                                    // widget.report.reportJobDescription[index]
-                                    //     .desImg!,
+                                        ? widget.report
+                                            .reportJobDescription[index].desImg!
+                                        : 'assets/images/default.png',
                                     fit: BoxFit.cover,
                                     loadingBuilder: (BuildContext context,
                                         Widget child,

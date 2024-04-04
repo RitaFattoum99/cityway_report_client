@@ -27,11 +27,18 @@ class ReportAcceptanceScreen extends StatelessWidget {
               'الموافقة على التسعير',
               style: TextStyle(color: AppColorManager.white),
             ),
-            bottom: const TabBar(
+            bottom: TabBar(
+              isScrollable: true,
               tabs: [
-                Tab(text: 'بانتظار الموافقة'),
-                Tab(text: 'بانتظار بدء العمل'),
-                Tab(text: 'مرفوض'),
+                Tab(
+                    text:
+                        'بانتظار الموافقة (${controller.getReportCountByStatus("Awaiting Approval")})'),
+                Tab(
+                    text:
+                        'بانتظار بدء العمل (${controller.getReportCountByStatus("Awaiting Start Of Work")})'),
+                Tab(
+                    text:
+                        'مرفوض (${controller.getReportCountByStatus("Declined")})'),
               ],
               labelColor: AppColorManager.white,
               unselectedLabelColor: AppColorManager.babyGreyAppColor,
@@ -141,35 +148,6 @@ class ReportAcceptanceScreen extends StatelessWidget {
       }
     }
   }
-  // Widget _buildReportList({required String status}) {
-  //   if (controller.isLoading.value) {
-  //     return const Center(child: CircularProgressIndicator());
-  //   } else {
-  //     var reports = controller.reportList
-  //         .where((report) =>
-  //             report.statusClient ==
-  //             'Complete') // Filter only "Complete" reports
-  //         .toList();
-
-  //     if (reports.isEmpty) {
-  //       return _buildEmptyListAnimation();
-  //     } else {
-  //       return RefreshIndicator(
-  //         onRefresh: () async {
-  //           controller.fetchReports();
-  //         },
-  //         child: ListView.builder(
-  //           itemCount: reports.length,
-  //           itemBuilder: (context, index) => GestureDetector(
-  //               onTap: () {
-  //                 Get.to(() => ReportAcceptScreen(report: reports[index]));
-  //               },
-  //               child: _buildReportItem(reports[index])),
-  //         ),
-  //       );
-  //     }
-  //   }
-  // }
 
   Widget _buildEmptyListAnimation() {
     return const AnimatedOpacity(

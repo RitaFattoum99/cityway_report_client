@@ -8,6 +8,9 @@ class ReportListController extends GetxController {
   var reportList = <DataAllReport>[].obs; // Use RxList for reactivity
   final ReportListService _service = ReportListService();
   late SecureStorage secureStorage;
+  int getReportCountByStatus(String status) {
+    return reportList.where((report) => report.statusClient == status).length;
+  }
 
   @override
   void onInit() {
