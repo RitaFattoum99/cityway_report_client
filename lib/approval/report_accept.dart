@@ -503,18 +503,40 @@ class _ReportAcceptScreenState extends State<ReportAcceptScreen> {
                             const SizedBox(height: 5),
                             Row(
                               children: [
-                                const Icon(
-                                  Icons.attach_money,
-                                  color: AppColorManager.secondaryAppColor,
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.attach_money,
+                                      color: AppColorManager.secondaryAppColor,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      'السعر: ${widget.report.reportJobDescription[index].jobDescription!.price.toString()}',
+                                      style: const TextStyle(
+                                        color:
+                                            AppColorManager.secondaryAppColor,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(width: 6),
-                                Text(
-                                  'السعر: ${widget.report.reportJobDescription[index].jobDescription!.price.toString()}',
-                                  style: const TextStyle(
-                                    color: AppColorManager.secondaryAppColor,
-                                    fontSize: 16,
-                                  ),
-                                ),
+                                // Row(
+                                //   children: [
+                                //     const Icon(
+                                //       Icons.attach_money,
+                                //       color: AppColorManager.secondaryAppColor,
+                                //     ),
+                                //     const SizedBox(width: 6),
+                                //     Text(
+                                //       'السعر الكلي: ${widget.report.reportJobDescription[index].jobDescription!.price.toString()}',
+                                //       style: const TextStyle(
+                                //         color:
+                                //             AppColorManager.secondaryAppColor,
+                                //         fontSize: 16,
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
                               ],
                             ),
                             const SizedBox(height: 6),

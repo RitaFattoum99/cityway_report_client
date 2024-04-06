@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>Explain why your app needs access to the documents folder</string>
+	<key>NSDownloadsFolderUsageDescription</key>
+	<string>Explain why your app needs access to the downloads folder</string>
 </dict>
 </plist>

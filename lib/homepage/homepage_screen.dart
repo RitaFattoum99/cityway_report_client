@@ -4,6 +4,7 @@ import 'package:cityway_report_client/homepage/reoport_list_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../approval/list_report_acceptance_screen.dart';
+import '../auth/profile.dart';
 import '../report_details.dart';
 import '/core/config/information.dart';
 import '/core/native_service/secure_storage.dart';
@@ -29,6 +30,7 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
   Widget build(BuildContext context) {
     return Obx(() {
       var statusList = [
+        'الكل',
         'Urgent',
         'Pending',
         'In-Review',
@@ -40,9 +42,12 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
       ];
       var tabs = statusList
           .map((status) => Tab(
-              text:
-                  '${_getStatusValue(status)} (${_getReportCountByStatus(status)})'))
+                text: status == 'الكل'
+                    ? 'الكل (${controller.reportList.length})'
+                    : '${_getStatusValue(status)} (${_getReportCountByStatus(status)})',
+              ))
           .toList();
+
       return DefaultTabController(
         length: statusList.length,
         child: Scaffold(
@@ -104,6 +109,21 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
           ),
           ListTile(
             leading: const Icon(
+              Icons.person_2_rounded,
+              color: AppColorManager.secondaryAppColor,
+            ),
+            title: const Text(
+              'الملف الشخصي',
+              style: TextStyle(
+                  color: AppColorManager.secondaryAppColor,
+                  fontWeight: FontWeight.bold),
+            ),
+            onTap: () {
+              Get.to(() => const Profile());
+            },
+          ),
+          ListTile(
+            leading: const Icon(
               Icons.attach_money,
               color: AppColorManager.secondaryAppColor,
             ),
@@ -139,9 +159,11 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
     if (controller.isLoading.value) {
       return const Center(child: CircularProgressIndicator());
     } else {
-      var reports = controller.reportList
-          .where((report) => report.statusClient == status)
-          .toList();
+      var reports = status == 'الكل'
+          ? controller.reportList
+          : controller.reportList
+              .where((report) => report.statusClient == status)
+              .toList();
 
       if (reports.isEmpty) {
         return _buildEmptyListAnimation();
@@ -165,9 +187,13 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
   }
 
   int _getReportCountByStatus(String status) {
-    return controller.reportList
-        .where((report) => report.statusClient == status)
-        .length;
+    if (status == 'الكل') {
+      return controller.reportList.length;
+    } else {
+      return controller.reportList
+          .where((report) => report.statusAdmin == status)
+          .length;
+    }
   }
 
   Widget _buildEmptyListAnimation() {
