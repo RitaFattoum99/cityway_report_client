@@ -22,4 +22,12 @@ class ApprovalController extends GetxController {
     approvalStatus = await service.accceptance(approval, reportId, token!);
     message = service.message;
   }
+
+  Future<void> doDone(int reportId) async {
+    secureStorage = SecureStorage();
+    String? token = await secureStorage.read("token");
+
+    approvalStatus = await service.update(reportId, token!);
+    message = service.message;
+  }
 }

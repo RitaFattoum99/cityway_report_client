@@ -3,8 +3,6 @@
 import 'package:cityway_report_client/homepage/reoport_list_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../approval/list_report_acceptance_screen.dart';
-import '../auth/profile.dart';
 import '../report_details.dart';
 import '/core/config/information.dart';
 import '/core/native_service/secure_storage.dart';
@@ -33,12 +31,13 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
         'الكل',
         'Urgent',
         'Pending',
-        'In-Review',
         'Awaiting Approval',
-        'Awaiting Start Of Work',
+        'Approved',
         'Declined',
         'Work Has Started',
+        'Work is Finished',
         'Done',
+        'Rejected By Admin',
       ];
       var tabs = statusList
           .map((status) => Tab(
@@ -105,36 +104,6 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
             ),
             onTap: () {
               Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.person_2_rounded,
-              color: AppColorManager.secondaryAppColor,
-            ),
-            title: const Text(
-              'الملف الشخصي',
-              style: TextStyle(
-                  color: AppColorManager.secondaryAppColor,
-                  fontWeight: FontWeight.bold),
-            ),
-            onTap: () {
-              Get.to(() => const Profile());
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.attach_money,
-              color: AppColorManager.secondaryAppColor,
-            ),
-            title: const Text(
-              'الموافقة على التسعير',
-              style: TextStyle(
-                  color: AppColorManager.secondaryAppColor,
-                  fontWeight: FontWeight.bold),
-            ),
-            onTap: () {
-              Get.to(() => ReportAcceptanceScreen());
             },
           ),
           ListTile(
@@ -313,19 +282,19 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
         return Colors.red;
       case 'Pending':
         return Colors.grey;
-      case 'In-Review':
-        return Colors.blue;
       case 'Awaiting Approval':
         return Colors.deepOrange;
-      case 'Awaiting Start Of Work':
+      case 'Approved':
         return Colors.pink;
       case 'Declined':
         return Colors.indigo;
       case 'Work Has Started':
         return Colors.purple;
-      case 'Done':
+      case 'Work is Finished':
         return Colors.yellow[700]!;
-      case 'Complete':
+      case 'Done':
+        return Colors.blue;
+      case 'Rejected By Admin':
         return Colors.green;
       default:
         return Colors.black;
@@ -338,20 +307,20 @@ class _TabBarWithListViewState extends State<TabBarWithListView> {
         return 'عاجل';
       case 'Pending':
         return 'قيد الانتظار';
-      case 'In-Review':
-        return 'قيد المراجعة';
       case 'Awaiting Approval':
         return 'بانتظار الموافقة';
-      case 'Awaiting Start Of Work':
-        return 'بانتظار بدء العمل';
+      case 'Approved':
+        return 'تمت الموافقة';
       case 'Declined':
-        return 'مرفوض';
+        return 'تم الرفض';
       case 'Work Has Started':
-        return 'تم بدأ العمل';
+        return 'تم بدء العمل';
+      case 'Work is Finished':
+        return 'تم إنهاء العمل';
       case 'Done':
         return 'منتهي';
-      case 'Complete':
-        return 'مكتمل';
+      case 'Rejected By Admin':
+        return 'تم الرفض';
       default:
         return '';
     }

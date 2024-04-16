@@ -528,7 +528,7 @@ class _ReportAcceptScreenState extends State<ReportAcceptScreen> {
                                 //     ),
                                 //     const SizedBox(width: 6),
                                 //     Text(
-                                //       'السعر الكلي: ${widget.report.reportJobDescription[index].jobDescription!.price.toString()}',
+                                //       'السعر الكلي: ${widget.report.reportJobDescription[index].jobDescription!.total.toString()}',
                                 //       style: const TextStyle(
                                 //         color:
                                 //             AppColorManager.secondaryAppColor,

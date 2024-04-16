@@ -1,11 +1,14 @@
 // ignore_for_file: avoid_print
+
 import 'dart:convert';
+import 'dart:io';
 
 import '/auth/user_model.dart';
 import '/core/config/information.dart';
 import '/core/config/service_config.dart';
 import '/core/native_service/secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart'; // Ensure this is added for MediaType
 
 class SignUpService {
   var message = '';
@@ -19,38 +22,42 @@ class SignUpService {
   var confirmPassword = '';
 
   var url = Uri.parse(ServiceConfig.domainNameServer + ServiceConfig.register);
-  Future<bool> register(UserData user) async {
-    print("register");
+  Future<bool> register(UserData user, File signupSignatureFile) async {
+    print("Registering user...");
     try {
-      var response = await http.post(url, headers: {
-        'User-Agent': 'PostmanRuntime/7.37.0',
-        'Accept': 'application/json',
-        'Connection': 'keep-alive'
-      }, body: {
-        'username': user.username,
-        'email': user.email,
-        'password': user.password,
-        'password_confirmation': user.confirmPassword,
-      });
+      var request = http.MultipartRequest('POST', url)
+        ..fields['username'] = user.username!
+        ..fields['email'] = user.email!
+        ..fields['password'] = user.password!
+        ..fields['password_confirmation'] = user.confirmPassword!
+        ..headers.addAll({
+          'User-Agent': 'PostmanRuntime/7.37.0',
+          'Accept': 'application/json',
+          'Connection': 'keep-alive'
+        })
+        ..files.add(await http.MultipartFile.fromPath(
+          'signature', // This should match the name expected by your backend
+          signupSignatureFile.path,
+          contentType:
+              MediaType('image', 'jpeg'), // Adjust the type accordingly
+        ));
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
 
       print(response.statusCode);
       print(response.body);
-      var jsonresponse = jsonDecode(response.body);
-      message = jsonresponse['message'];
+      var jsonResponse = jsonDecode(response.body);
+      message = jsonResponse['message'];
+
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // message = "User created successfully";
-        token = jsonresponse['data']['token'];
-        role = jsonresponse['data']['roles'][0];
-        userID = jsonresponse['data']['id'];
-        username = jsonresponse['data']['username'];
-        email = jsonresponse['data']['email'];
-        print(response.statusCode);
-        print(response.body);
-        print(message);
-        print('user id : $userID');
-        print("role: $role");
-        print("user name: $username");
-        print("token : $token");
+        token = jsonResponse['data']['token'];
+        role = jsonResponse['data']['roles'][0];
+        userID = jsonResponse['data']['id'];
+        username = jsonResponse['data']['username'];
+        email = jsonResponse['data']['email'];
+
+        print(
+            "User ID: $userID, Role: $role, Username: $username, Token: $token");
 
         Information.TOKEN = token;
         Information.userId = userID;
@@ -58,24 +65,17 @@ class SignUpService {
         Information.email = email;
         Information.role = role;
         SecureStorage secureStorage = SecureStorage();
-        await secureStorage.save("token", Information.TOKEN);
-        await secureStorage.save("role", Information.role);
-        await secureStorage.save("username", Information.username);
-        await secureStorage.save("email", Information.email);
-        await secureStorage.saveInt("id", Information.userId);
+        await secureStorage.save("token", token);
+        await secureStorage.save("role", role);
+        await secureStorage.save("username", username);
+        await secureStorage.save("email", email);
+        await secureStorage.saveInt("id", userID);
 
         return true;
-      } else if (response.statusCode == 422 || response.statusCode == 500) {
-        // message = "please verify your information";
-        print(response.statusCode);
-        print(response.body);
-        print(message);
-        return false;
       } else {
-        // message = "there is error..";
-        print(response.statusCode);
-        print(response.body);
-        print(message);
+        print("Response code: ${response.statusCode}");
+        print("Response body: ${response.body}");
+        print("Message: $message");
         return false;
       }
     } catch (e) {

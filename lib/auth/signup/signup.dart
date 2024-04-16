@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
+import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
+import '../signature.dart';
 import '/auth/signin/signin.dart';
 import '/auth/signup/signup_controller.dart';
 import '/core/resource/color_manager.dart';
@@ -19,6 +21,7 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final signUpController = Get.put(SignUpController());
   final _formKey = GlobalKey<FormBuilderState>();
+  final GlobalKey<SfSignaturePadState> signatureGlobalKey = GlobalKey();
 
   final nameController = TextEditingController();
   final emailController = TextEditingController();
@@ -54,13 +57,28 @@ class _SignUpState extends State<SignUp> {
                 _buildPasswordField(),
                 const SizedBox(height: 16.0),
                 _buildConfirmPasswordField(),
+                const SizedBox(height: 16.0),
+                _buildSignature(),
                 _buildSignInRedirect(),
-                const SizedBox(height: 50.0),
+                const SizedBox(height: 30.0),
                 _buildSignUpButton(size),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  SizedBox _buildSignature() {
+    return SizedBox(
+      height: 100,
+      child: SignaturePage(
+        signatureGlobalKey: signatureGlobalKey,
+        name: 'signup.png',
+        onSignatureSaved: (signatureFile) {
+          signUpController.signupSignatureFile = signatureFile;
+        },
       ),
     );
   }

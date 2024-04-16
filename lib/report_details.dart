@@ -1,17 +1,19 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: avoid_print
 
 import 'dart:io';
 
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
+
 import '/core/resource/color_manager.dart';
-import '../core/resource/size_manager.dart';
+import '../../core/resource/size_manager.dart';
 import '/homepage/allreport_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'approval/approval_controller.dart';
+import 'homepage/reoport_list_controller.dart';
 
 class ReportDetailsScreen extends StatefulWidget {
   final DataAllReport report;
@@ -23,41 +25,18 @@ class ReportDetailsScreen extends StatefulWidget {
 }
 
 class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
-  bool isExpanded = false;
-  bool isExpanded1 = false;
+  final ApprovalController approvalController = Get.put(ApprovalController());
   final ScrollController _scrollController = ScrollController();
 
-  // Future<String> downloadPDF(String url, String filename) async {
-  //   final response = await http.get(Uri.parse(url));
-  //   final directory = await getApplicationDocumentsDirectory();
-  //   final file = File('${directory.path}/$filename');
-  //   await file.writeAsBytes(response.bodyBytes);
-  //   return file.path;
-  // }
+  Color _acceptedColor = Colors.grey;
+  Color _confirmColor = Colors.grey;
+  bool isExpanded = false;
+  bool isExpanded1 = false;
   Future<String> downloadPDF(String url, String filename) async {
-    // Check and request storage permission
-    var status = await Permission.storage.status;
-    if (!status.isGranted) {
-      await Permission.storage.request();
-    }
-
-    // Download the file
     final response = await http.get(Uri.parse(url));
-    final bytes = response.bodyBytes;
-
-    // Get the path to the external storage directory
-    String dir;
-    if (kIsWeb) {
-      // Handle web or other platforms
-      dir = (await getApplicationDocumentsDirectory()).path;
-    } else {
-      dir = (await getExternalStorageDirectory())!.path;
-    }
-
-    // Save the file to the downloads folder (Android)
-    final file = File('$dir/$filename');
-    await file.writeAsBytes(bytes);
-
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/$filename');
+    await file.writeAsBytes(response.bodyBytes);
     return file.path;
   }
 
@@ -190,7 +169,6 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                 endIndent: 10,
               ),
               const SizedBox(height: 5),
-
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -215,8 +193,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                     child: Stack(
                       children: [
                         ListView.builder(
-                          controller:
-                              _scrollController, // Use the ScrollController here
+                          controller: _scrollController,
                           scrollDirection: Axis.horizontal,
                           itemCount: widget.report.contactInfo.length,
                           itemBuilder: (BuildContext context, int index) {
@@ -323,7 +300,6 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 5),
               const Divider(
                 color: AppColorManager.babyGreyAppColor,
@@ -352,18 +328,17 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                   SizedBox(
                     height: 400,
                     // width: 400,
-                    child: ListView.builder(
-                      // separatorBuilder: (context, index) =>
-                      //     const SizedBox(width: 20),
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(width: 25),
                       scrollDirection: Axis.horizontal,
                       itemCount: widget.report.reportDescription.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const SizedBox(width: 6),
                             SizedBox(
-                              width: 325,
+                              width: 310,
                               child: Text(
                                 isExpanded
                                     ? widget.report.reportDescription[index]
@@ -454,7 +429,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                                   ),
                                 ),
                               ),
-                            ),
+                            )
                           ],
                         );
                       },
@@ -468,234 +443,533 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                 endIndent: 10,
               ),
               const SizedBox(height: 5),
-              InkWell(
-                onTap: () async {
-                  EasyLoading.show(
-                      status: 'يتم التحميل...', dismissOnTap: true);
-                  String url = widget.report.workOrder;
-                  String filename = url.split('/').last;
-                  String filePath = await downloadPDF(url, filename);
-                  EasyLoading.dismiss();
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => PdfViewPage(file: File(filePath)),
-                  ));
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          widget.report.workOrder.split('/').last,
-                          style: const TextStyle(
-                              color: AppColorManager.secondaryAppColor,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      const Icon(Icons.picture_as_pdf, size: 30),
-                    ],
-                  ),
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  widget.report.statusClient == 'Awaiting Approval' ||
+                          widget.report.statusClient == 'Approved' ||
+                          widget.report.statusClient == 'Declined' ||
+                          widget.report.statusClient == 'Work Has Started' ||
+                          widget.report.statusClient == 'Work is Finished' ||
+                          widget.report.statusClient == 'Rejected By Admin' ||
+                          widget.report.statusClient == 'Done'
+                      ? Column(
+                          children: [
+                            const Row(
+                              children: [
+                                Icon(
+                                  Icons.description,
+                                  color: AppColorManager.mainAppColor,
+                                ),
+                                SizedBox(width: 6),
+                                Text(
+                                  "وصف الأعمال:",
+                                  style: TextStyle(
+                                      color: AppColorManager.mainAppColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 400,
+                              width: 300,
+                              child: ListView.separated(
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(width: 20),
+                                scrollDirection: Axis.horizontal,
+                                itemCount:
+                                    widget.report.reportJobDescription.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: 300,
+                                        child: Text(
+                                          isExpanded1
+                                              ? widget
+                                                  .report
+                                                  .reportJobDescription[index]
+                                                  .jobDescription!
+                                                  .description!
+                                              : widget
+                                                          .report
+                                                          .reportJobDescription[
+                                                              index]
+                                                          .jobDescription!
+                                                          .description!
+                                                          .length >
+                                                      50
+                                                  ? "${widget.report.reportJobDescription[index].jobDescription!.description!.substring(0, 40)}..."
+                                                  : widget
+                                                      .report
+                                                      .reportJobDescription[
+                                                          index]
+                                                      .jobDescription!
+                                                      .description!,
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            isExpanded1 = !isExpanded1;
+                                          });
+                                        },
+                                        child: Text(
+                                          isExpanded1
+                                              ? "عرض أقل"
+                                              : "عرض المزيد",
+                                          style: const TextStyle(
+                                              color: Colors.blue, fontSize: 16),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment
+                                            .spaceEvenly, // This will distribute space evenly between the elements
+                                        children: [
+                                          const Icon(Icons.attach_money,
+                                              color: AppColorManager
+                                                  .secondaryAppColor),
+                                          const SizedBox(width: 6),
+                                          Text(
+                                            'السعر: ${widget.report.reportJobDescription[index].jobDescription!.price.toString()}',
+                                            style: const TextStyle(
+                                              color: AppColorManager
+                                                  .secondaryAppColor,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                              width: 10), // Added space
+                                          const Icon(
+                                              Icons.production_quantity_limits,
+                                              color: AppColorManager
+                                                  .secondaryAppColor),
+                                          const SizedBox(width: 6),
+                                          Text(
+                                            'الكمية: ${widget.report.reportJobDescription[index].quantity.toString()}',
+                                            style: const TextStyle(
+                                              color: AppColorManager
+                                                  .secondaryAppColor,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                              width: 10), // Added space
+                                        ],
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.attach_money,
+                                              color: AppColorManager
+                                                  .secondaryAppColor),
+                                          const SizedBox(width: 6),
+                                          Text(
+                                            'الإجمالي: ${((widget.report.reportJobDescription[index].quantity ?? 0) * (widget.report.reportJobDescription[index].jobDescription!.price ?? 0)).toStringAsFixed(2)}',
+                                            style: const TextStyle(
+                                              color: AppColorManager
+                                                  .secondaryAppColor,
+                                              fontSize: 16,
+                                            ),
+                                          ), // Added some space before the note
+                                        ],
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.note_add,
+                                              color: AppColorManager
+                                                  .secondaryAppColor),
+                                          const SizedBox(width: 6),
+                                          Text(
+                                            'ملاحظة: ${widget.report.reportJobDescription[index].note ?? ' '}',
+                                            style: const TextStyle(
+                                              color: AppColorManager
+                                                  .secondaryAppColor,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                          height:
+                                              10), // Added some space before the image
+                                      Container(
+                                        height: 200,
+                                        width: 300,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          child: Image.network(
+                                            widget
+                                                        .report
+                                                        .reportJobDescription[
+                                                            index]
+                                                        .desImg !=
+                                                    null
+                                                ? widget
+                                                    .report
+                                                    .reportJobDescription[index]
+                                                    .desImg!
+                                                : 'assets/images/default.png',
+                                            fit: BoxFit.cover,
+                                            loadingBuilder:
+                                                (BuildContext context,
+                                                    Widget child,
+                                                    ImageChunkEvent?
+                                                        loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return child;
+                                              }
+                                              return Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  value: loadingProgress
+                                                              .expectedTotalBytes !=
+                                                          null
+                                                      ? loadingProgress
+                                                              .cumulativeBytesLoaded /
+                                                          loadingProgress
+                                                              .expectedTotalBytes!
+                                                      : null,
+                                                ),
+                                              );
+                                            },
+                                            errorBuilder: (BuildContext context,
+                                                Object error,
+                                                StackTrace? stackTrace) {
+                                              return const Center(
+                                                  child: Icon(Icons.error));
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        )
+                      : const SizedBox(),
+                  const SizedBox(height: 10),
+                  widget.report.statusClient == 'Work Has Started' ||
+                          widget.report.statusClient == 'Work is Finished' ||
+                          widget.report.statusClient == 'Rejected By Admin' ||
+                          widget.report.statusClient == 'Done'
+                      ? InkWell(
+                          onTap: () async {
+                            EasyLoading.show(
+                                status: 'يتم التحميل...', dismissOnTap: true);
+                            String url = widget.report.workOrder;
+                            String filename = url.split('/').last;
+                            String filePath = await downloadPDF(url, filename);
+                            EasyLoading.dismiss();
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  PdfViewPage(file: File(filePath)),
+                            ));
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    widget.report.workOrder.split('/').last,
+                                    style: const TextStyle(
+                                        color:
+                                            AppColorManager.secondaryAppColor,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                const Icon(Icons.picture_as_pdf, size: 30),
+                              ],
+                            ),
+                          ),
+                        )
+                      : const SizedBox(),
+                  const SizedBox(height: 10),
+                  widget.report.statusClient == 'Work is Finished' ||
+                          widget.report.statusClient == 'Rejected By Admin' ||
+                          widget.report.statusClient == 'Done'
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "توقيع المهندس:",
+                              style: TextStyle(
+                                  color: AppColorManager.secondaryAppColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              child: _buildImage(widget.report.fmeSignature),
+                            ),
+                            const Text(
+                              "ملاحظات المسؤول:",
+                              style: TextStyle(
+                                  color: AppColorManager.secondaryAppColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              widget.report.clientNotes,
+                              style: const TextStyle(
+                                  color: AppColorManager.secondaryAppColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            const Text(
+                              "توقيع المسؤول:",
+                              style: TextStyle(
+                                  color: AppColorManager.secondaryAppColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              child: _buildImage(widget.report.clientSignature),
+                            ),
+                            const Text(
+                              "ملاحظات الأدمن:",
+                              style: TextStyle(
+                                  color: AppColorManager.secondaryAppColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              widget.report.adminNotes,
+                              style: const TextStyle(
+                                  color: AppColorManager.secondaryAppColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            const Text(
+                              "توقيع الأدمن:",
+                              style: TextStyle(
+                                  color: AppColorManager.secondaryAppColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              child: _buildImage(widget.report.adminSignature),
+                            ),
+                            const SizedBox(height: 10),
+                            Center(
+                              child: GestureDetector(
+                                onTap: () async {
+                                  EasyLoading.show(
+                                      status: 'loading...', dismissOnTap: true);
+                                  await approvalController
+                                      .doDone(widget.report.id);
+                                  if (approvalController.approvalStatus) {
+                                    EasyLoading.showSuccess(
+                                        approvalController.message,
+                                        duration: const Duration(seconds: 2));
+                                    final reportListController =
+                                        Get.find<ReportListController>();
+                                    reportListController.fetchReports();
+
+                                    Get.offNamed('home');
+                                  } else {
+                                    EasyLoading.showError(
+                                        approvalController.message);
+                                    print("Approval error");
+                                  }
+                                },
+                                child: Container(
+                                  width: size.width * 0.3,
+                                  padding: EdgeInsets.only(
+                                    top: MediaQuery.of(context).size.width *
+                                        0.01,
+                                    bottom: MediaQuery.of(context).size.width *
+                                        0.01,
+                                    left: MediaQuery.of(context).size.width *
+                                        0.01,
+                                    right: MediaQuery.of(context).size.width *
+                                        0.01,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColorManager.mainAppColor,
+                                    borderRadius: BorderRadius.circular(4.0),
+                                  ),
+                                  child: const Center(
+                                    child: Text(
+                                      'تم',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : const SizedBox(),
+                  const SizedBox(height: 10),
+                  widget.report.statusClient == 'Awaiting Approval'
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  setState(() {
+                                    _acceptedColor = Colors.green;
+                                    _confirmColor = Colors.grey;
+                                  });
+                                  EasyLoading.show(
+                                      status: 'loading...', dismissOnTap: true);
+                                  await approvalController.doAcceptance(
+                                      1, widget.report.id);
+                                  if (approvalController.approvalStatus) {
+                                    EasyLoading.showSuccess(
+                                        approvalController.message,
+                                        duration: const Duration(seconds: 2));
+                                    final reportListController =
+                                        Get.find<ReportListController>();
+                                    reportListController.fetchReports();
+
+                                    Get.offNamed('home');
+                                  } else {
+                                    EasyLoading.showError(
+                                        approvalController.message);
+                                    print("Approval error");
+                                  }
+                                },
+                                child: Container(
+                                  width: size.width * 0.3,
+                                  padding: EdgeInsets.only(
+                                    top: MediaQuery.of(context).size.width *
+                                        0.01,
+                                    bottom: MediaQuery.of(context).size.width *
+                                        0.01,
+                                    left: MediaQuery.of(context).size.width *
+                                        0.01,
+                                    right: MediaQuery.of(context).size.width *
+                                        0.01,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: _acceptedColor,
+                                    borderRadius: BorderRadius.circular(4.0),
+                                  ),
+                                  child: const Center(
+                                    child: Text(
+                                      'قبول',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () async {
+                                  setState(() {
+                                    _acceptedColor = Colors.grey;
+                                    _confirmColor = Colors.red;
+                                  });
+                                  EasyLoading.show(
+                                      status: 'loading...', dismissOnTap: true);
+                                  await approvalController.doAcceptance(
+                                      0, widget.report.id);
+                                  if (approvalController.approvalStatus) {
+                                    EasyLoading.showSuccess(
+                                        approvalController.message,
+                                        duration: const Duration(seconds: 2));
+                                    final reportListController =
+                                        Get.find<ReportListController>();
+                                    reportListController.fetchReports();
+
+                                    Get.offNamed('home');
+                                  } else {
+                                    EasyLoading.showError(
+                                        approvalController.message);
+                                    print("Approval error");
+                                  }
+                                },
+                                child: Container(
+                                  width: size.width * 0.3,
+                                  padding: EdgeInsets.only(
+                                    top: MediaQuery.of(context).size.width *
+                                        0.01,
+                                    bottom: MediaQuery.of(context).size.width *
+                                        0.01,
+                                    left: MediaQuery.of(context).size.width *
+                                        0.01,
+                                    right: MediaQuery.of(context).size.width *
+                                        0.01,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: _confirmColor,
+                                    borderRadius: BorderRadius.circular(4.0),
+                                  ),
+                                  child: const Center(
+                                    child: Text(
+                                      'رفض',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ])
+                      : const SizedBox(),
+                  const SizedBox(height: 10),
+                ],
               ),
-
-              const SizedBox(height: 10),
-
-              // Column(
-              //   crossAxisAlignment: CrossAxisAlignment.start,
-              //   children: [
-              //     const Row(
-              //       children: [
-              //         Icon(
-              //           Icons.description,
-              //           color: AppColorManager.mainAppColor,
-              //         ),
-              //         SizedBox(width: 6),
-              //         Text(
-              //           "وصف الأعمال:",
-              //           style: TextStyle(
-              //               color: AppColorManager.mainAppColor,
-              //               fontWeight: FontWeight.bold,
-              //               fontSize: 18),
-              //         ),
-              //       ],
-              //     ),
-              //     SizedBox(
-              //       height: 600,
-              //       width: 300,
-              //       child: ListView.separated(
-              //         separatorBuilder: (context, index) =>
-              //             const SizedBox(width: 20),
-              //         scrollDirection: Axis.horizontal,
-              //         itemCount: widget.report.reportJobDescription.length,
-              //         itemBuilder: (BuildContext context, int index) {
-              //           return Column(
-              //             crossAxisAlignment: CrossAxisAlignment.start,
-              //             children: [
-              //               SizedBox(
-              //                 width: 300,
-              //                 child: Text(
-              //                   isExpanded1
-              //                       ? widget.report.reportJobDescription[index]
-              //                           .jobDescription!.description!
-              //                       : widget
-              //                                   .report
-              //                                   .reportJobDescription[index]
-              //                                   .jobDescription!
-              //                                   .description!
-              //                                   .length >
-              //                               50
-              //                           ? "${widget.report.reportJobDescription[index].jobDescription!.description!.substring(0, 40)}..."
-              //                           : widget
-              //                               .report
-              //                               .reportJobDescription[index]
-              //                               .jobDescription!
-              //                               .description!,
-              //                   style: const TextStyle(
-              //                     color: Colors.black,
-              //                     fontSize: 16,
-              //                   ),
-              //                 ),
-              //               ),
-              //               InkWell(
-              //                 onTap: () {
-              //                   setState(() {
-              //                     isExpanded1 = !isExpanded1;
-              //                   });
-              //                 },
-              //                 child: Text(
-              //                   isExpanded1 ? "عرض أقل" : "...عرض المزيد",
-              //                   style: const TextStyle(
-              //                       color: AppColorManager.greyAppColor,
-              //                       fontSize: 16),
-              //                 ),
-              //               ),
-              // const SizedBox(height: 6),
-              // Row(
-              //   children: [
-              //     const Icon(
-              //       Icons.note_add,
-              //       color: AppColorManager.secondaryAppColor,
-              //     ),
-              //     const SizedBox(width: 6),
-              //     Text(
-              //       'ملاحظة: ${widget.report.reportJobDescription[index].note ?? ' '}',
-              //       style: const TextStyle(
-              //         color: AppColorManager.secondaryAppColor,
-              //         fontSize: 16,
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              // const SizedBox(height: 6),
-              //               Expanded(
-              //                 child: Container(
-              //                   height: 200,
-              //                   width: 300,
-              //                   decoration: BoxDecoration(
-              //                     borderRadius: BorderRadius.circular(8),
-              //                   ),
-              //                   child: ClipRRect(
-              //                     borderRadius: BorderRadius.circular(8),
-              //                     child: Image.network(
-              //                       // getFullImageUrl
-              //                       // (
-              //                       widget.report.reportJobDescription[index]
-              //                           .desImg!,
-              //                       // ),
-              //                       fit: BoxFit.cover,
-              //                       loadingBuilder: (BuildContext context,
-              //                           Widget child,
-              //                           ImageChunkEvent? loadingProgress) {
-              //                         if (loadingProgress == null) {
-              //                           // Image is fully loaded
-              //                           return child;
-              //                         }
-              //                         // While the image is loading, return a loader widget
-              //                         return Center(
-              //                           child: CircularProgressIndicator(
-              //                             value: loadingProgress
-              //                                         .expectedTotalBytes !=
-              //                                     null
-              //                                 ? loadingProgress
-              //                                         .cumulativeBytesLoaded /
-              //                                     loadingProgress
-              //                                         .expectedTotalBytes!
-              //                                 : null,
-              //                           ),
-              //                         );
-              //                       },
-              //                       errorBuilder: (BuildContext context,
-              //                           Object error, StackTrace? stackTrace) {
-              //                         return const Center(
-              //                           child: Icon(Icons.error),
-              //                         );
-              //                       },
-              //                     ),
-              //                   ),
-              //                 ),
-              //               ),
-              //               const SizedBox(height: 10),
-              //               Expanded(
-              //                 child: Container(
-              //                   height: 200,
-              //                   width: 300,
-              //                   decoration: BoxDecoration(
-              //                     borderRadius: BorderRadius.circular(8),
-              //                   ),
-              //                   child: ClipRRect(
-              //                     borderRadius: BorderRadius.circular(8),
-              //                     child: Image.network(
-              //                       // getFullImageUrl
-              //                       // (
-              //                       widget.report.reportJobDescription[index]
-              //                           .afterDesImg!,
-              //                       // ),
-              //                       fit: BoxFit.cover,
-              //                       loadingBuilder: (BuildContext context,
-              //                           Widget child,
-              //                           ImageChunkEvent? loadingProgress) {
-              //                         if (loadingProgress == null) {
-              //                           // Image is fully loaded
-              //                           return child;
-              //                         }
-              //                         // While the image is loading, return a loader widget
-              //                         return Center(
-              //                           child: CircularProgressIndicator(
-              //                             value: loadingProgress
-              //                                         .expectedTotalBytes !=
-              //                                     null
-              //                                 ? loadingProgress
-              //                                         .cumulativeBytesLoaded /
-              //                                     loadingProgress
-              //                                         .expectedTotalBytes!
-              //                                 : null,
-              //                           ),
-              //                         );
-              //                       },
-              //                       errorBuilder: (BuildContext context,
-              //                           Object error, StackTrace? stackTrace) {
-              //                         return const Center(
-              //                           child: Icon(Icons.error),
-              //                         );
-              //                       },
-              //                     ),
-              //                   ),
-              //                 ),
-              //               ),
-              //               const SizedBox(height: 10),
-              //             ],
-              //           );
-              //         },
-              //       ),
-              //     ),
-              //   ],
-              // ),
             ],
           ),
         ),
       ),
     );
   }
+}
+
+Widget _buildImage(String? imageUrl) {
+  // Check if the URL is valid and is a network URL
+  final isNetworkUrl = imageUrl?.startsWith('http') ?? false;
+
+  if (!isNetworkUrl) {
+    // Return an alternative widget or image if the URL is not valid
+    return const Center(
+        child: Text(
+      'لم يتم التوقيع بعد',
+      style: TextStyle(color: AppColorManager.mainAppColor),
+    ));
+  }
+
+  // If the URL is valid, use Image.network with a loading builder
+  return Image.network(
+    imageUrl!,
+    loadingBuilder:
+        (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+      if (loadingProgress == null) return child; // Image is fully loaded
+      // While the image is loading, show a progress indicator
+      return Center(
+        child: CircularProgressIndicator(
+          value: loadingProgress.expectedTotalBytes != null
+              ? loadingProgress.cumulativeBytesLoaded /
+                  loadingProgress.expectedTotalBytes!
+              : null,
+        ),
+      );
+    },
+    errorBuilder:
+        (BuildContext context, Object exception, StackTrace? stackTrace) {
+      // If the image fails to load, show an alternative widget
+      return const Center(child: Text('Failed to load image'));
+    },
+  );
 }
 
 class PdfViewPage extends StatelessWidget {

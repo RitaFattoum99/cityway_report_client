@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '/auth/signup/signup_service.dart';
 import '/auth/user_model.dart';
 import 'package:get/get.dart';
@@ -8,6 +10,7 @@ class SignUpController extends GetxController {
   var email = '';
   var password = '';
   var confirmPassword = '';
+  var signupSignatureFile = File('');
 
   var registerStatus = false;
   // ignore: prefer_typing_uninitialized_variables
@@ -22,7 +25,7 @@ class SignUpController extends GetxController {
         email: email,
         password: password,
         confirmPassword: confirmPassword);
-    registerStatus = await service.register(user);
+    registerStatus = await service.register(user, signupSignatureFile);
     message = service.message;
   }
 }

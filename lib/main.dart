@@ -14,7 +14,6 @@ import 'auth/signin/signin_bindings.dart';
 import 'create_report/report_bindings.dart';
 import 'homepage/homepage_screen.dart';
 import 'homepage/report_list_bindings.dart';
-import 'notification_report.dart';
 
 void main() {
   runApp(const MyApp());
@@ -66,10 +65,6 @@ class MyApp extends StatelessWidget {
             name: '/create',
             page: () => const CreateReport(),
             binding: ReportBindings()),
-        GetPage(
-          name: '/notification',
-          page: () => const NotificationListScreen(),
-        ),
       ],
       builder: EasyLoading.init(),
     );

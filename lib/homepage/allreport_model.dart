@@ -49,7 +49,17 @@ class DataAllReport {
   int urgent;
   int budget;
   String workOrder;
-
+  String lpo;
+  int draft;
+  int clientSatisfaction;
+  String clientNotes;
+  String? adminSignature;
+  String? estimationSignature;
+  String? fmeSignature;
+  String complaintPartySignature;
+  String? clientSignature;
+  int adminRevision;
+  dynamic adminNotes;
   DateTime createdAt;
   DateTime updatedAt;
   String complaintParty;
@@ -76,6 +86,17 @@ class DataAllReport {
     required this.urgent,
     required this.budget,
     required this.workOrder,
+    required this.lpo,
+    required this.draft,
+    required this.clientSatisfaction,
+    required this.clientNotes,
+    required this.adminSignature,
+    required this.estimationSignature,
+    required this.fmeSignature,
+    required this.complaintPartySignature,
+    required this.clientSignature,
+    required this.adminRevision,
+    required this.adminNotes,
     required this.createdAt,
     required this.updatedAt,
     required this.complaintParty,
@@ -106,6 +127,17 @@ class DataAllReport {
         urgent: json["urgent"],
         budget: json["budget"] ?? 0,
         workOrder: json["work_order"] ?? '',
+        lpo: json["LPO"] ?? '',
+        draft: json["draft"] ?? 0,
+        clientSatisfaction: json["client_satisfaction"] ?? 0,
+        clientNotes: json["client_notes"] ?? '',
+        adminSignature: json["admin_signature"] ?? '',
+        estimationSignature: json["estimation_signature"] ?? '',
+        fmeSignature: json["fme_signature"] ?? '',
+        complaintPartySignature: json["complaint_party_signature"] ?? '',
+        clientSignature: json["client_signature"] ?? '',
+        adminRevision: json["admin_revision"] ?? 0,
+        adminNotes: json["admin_notes"] ?? '',
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
         complaintParty: json["complaint_party"],
@@ -140,6 +172,17 @@ class DataAllReport {
         "urgent": urgent,
         "budget": budget,
         "work_order": workOrder,
+        "LPO": lpo,
+        "draft": draft,
+        "client_satisfaction": clientSatisfaction,
+        "client_notes": clientNotes,
+        "admin_signature": adminSignature,
+        "estimation_signature": estimationSignature,
+        "fme_signature": fmeSignature,
+        "complaint_party_signature": complaintPartySignature,
+        "client_signature": clientSignature,
+        "admin_revision": adminRevision,
+        "admin_notes": adminNotes,
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
         "complaint_party": complaintParty,
